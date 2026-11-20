@@ -152,7 +152,7 @@ const NEPSE = [
   { key: 'hydro', name: 'Hydropower', match: /^hydro ?power/ },
   { key: 'microfinance', name: 'Microfinance', match: /^microfinance/ },
   { key: 'devbank', name: 'Development banks', match: /^development bank/ },
-  { key: 'lifeins', name: 'Life insurance', match: /^life insurance/ },
+  { key: 'finance', name: 'Finance companies', match: /^finance index/ },
 ];
 
 function nepse(): Category {

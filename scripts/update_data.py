@@ -330,9 +330,21 @@ def update_nepse() -> str:
             errors.append(f"nepse-data-api: {type(e).__name__}: {e}")
     if not rows:
         raise RuntimeError("nepse: " + "; ".join(errors))
-    date = date or TODAY.isoformat()
     fields, existing = read_rows("nepse.csv")
-    fmt = lambda v: "" if v is None else f"{v:g}" if isinstance(v, float) else str(v)
+    if not date:
+        # No "As of" date on the page: NEPSE trades Sunday-Thursday, so on Friday/Saturday the
+        # figures shown are from the previous Thursday.
+        d = TODAY
+        while d.weekday() in (4, 5):  # Fri, Sat
+            d -= dt.timedelta(days=1)
+        date = d.isoformat()
+    # Holidays: if every close equals the last stored day's, the market didn't trade; don't add a duplicate day.
+    if existing:
+        last = max(r["date"] for r in existing)
+        prev = {r["index"]: r["close"] for r in existing if r["date"] == last}
+        if last != date and prev and all(prev.get(r["index"]) == f"{r['close']:.2f}" for r in rows):
+            return f"nepse: no new trading day (values unchanged since {last})"
+    fmt = lambda v: "" if v is None else f"{v:.2f}" if isinstance(v, float) else str(v)
     for row in rows:
         existing.append({"date": date, **{k: fmt(v) for k, v in row.items()}})
     write_rows("nepse.csv", fields, existing, ("date", "index"))

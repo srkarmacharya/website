@@ -12,6 +12,8 @@ GitHub repo ──push──▶ Cloudflare Workers Builds: `npm run build` + `np
      └── GitHub Action (daily, 12:32 Nepal time) fetches new prices into data/ and commits them
 ```
 
+For decisions, accounts, status and to-dos, see **[PROJECT_NOTES.md](PROJECT_NOTES.md)**.
+
 ## Everyday edits (no coding needed)
 
 You can edit any file directly on github.com: open it, click the pencil icon, make the change and press **Commit changes**. The live site updates about a minute later.
