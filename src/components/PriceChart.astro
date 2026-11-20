@@ -21,6 +21,7 @@ const ranges = ['1M', '6M', '1Y', 'All'];
   <div class="legend"></div>
   <script type="application/json" class="chart-data" set:html={payload} />
   {cat.dates.length === 0 && <p class="empty">No data yet. This chart fills in after the first daily update.</p>}
+  {cat.dates.length === 1 && <p class="empty">Collecting daily prices since {new Date(cat.dates[0] + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}. The lines appear once there are two days of data.</p>}
 </figure>
 
 <style>

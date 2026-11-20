@@ -31,7 +31,7 @@ function setup(fig) {
   const compact = fig.classList.contains('compact');
   let range = fig.dataset.range || '1Y';
   const hidden = new Set();
-  if (!data.dates.length) return;
+  if (data.dates.length < 2) return;
 
   const colors = () => ['--c1', '--c2', '--c3', '--c4', '--c5', '--c6'].map(css);
 

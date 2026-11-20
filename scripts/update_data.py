@@ -112,16 +112,15 @@ BULLION_PATTERNS = {
 }
 
 
-BULLION_URLS = ["https://www.fenegosida.org/", "https://fenegosida.org/", "http://www.fenegosida.org/"]
+BULLION_URLS = ["https://www.fenegosida.org/", "https://www.fenegosida.org/rate-history.php"]
 
 
-def _bullion_debug(note: str, text: str = "") -> None:
-    """Save a short diagnostic so a failed parse can be fixed without guessing."""
+def _bullion_debug(note: str, pages: list[tuple[str, str]]) -> None:
+    """Save the raw HTML of the pages tried, so a failed parse can be fixed without guessing."""
     d = DATA / "_debug"
     d.mkdir(exist_ok=True)
-    snippets = [m.start() for m in re.finditer(r"tola|gold|silver|सुन|चाँदी", text, re.I)][:12]
-    parts = [text[max(0, i - 150): i + 150] for i in snippets] or [text[:1500]]
-    (d / "bullion.txt").write_text(f"{dt.datetime.now(NPT).isoformat()}\n{note}\n\n" + "\n---\n".join(parts), encoding="utf-8")
+    body = "\n\n".join(f"===== {u} =====\n{h[:6000]}" for u, h in pages)
+    (d / "bullion.txt").write_text(f"{dt.datetime.now(NPT).isoformat()}\n{note}\n\n{body}", encoding="utf-8")
 
 
 def parse_bullion(text: str) -> dict[str, float]:
@@ -139,26 +138,39 @@ def parse_bullion(text: str) -> dict[str, float]:
 
 
 def update_bullion() -> str:
-    errors = []
-    text = ""
-    for url in BULLION_URLS:
+    errors: list[str] = []
+    pages: list[tuple[str, str]] = []
+    queue = list(BULLION_URLS)
+    seen: set[str] = set()
+    found: dict[str, float] = {}
+    while queue and not found and len(seen) < 8:
+        url = queue.pop(0)
+        if url in seen:
+            continue
+        seen.add(url)
         try:
             r = requests.get(url, headers=UA, timeout=40)
-            text = BeautifulSoup(r.text, "html.parser").get_text(" ", strip=True)
-            if r.status_code != 200:
-                errors.append(f"{url}: HTTP {r.status_code}")
-                continue
-            found = parse_bullion(text)
-            if found:
-                break
-            errors.append(f"{url}: page loaded ({len(text)} chars) but no prices matched")
         except requests.RequestException as e:
-            errors.append(f"{url}: {type(e).__name__}: {e}")
-    else:
-        _bullion_debug("; ".join(errors), text)
+            errors.append(f"{url}: {type(e).__name__}")
+            continue
+        pages.append((url, r.text))
+        soup = BeautifulSoup(r.text, "html.parser")
+        found = parse_bullion(soup.get_text(" ", strip=True)) if r.status_code == 200 else {}
+        if found:
+            break
+        errors.append(f"{url}: HTTP {r.status_code}, no prices")
+        # prices are often in an embedded frame or a separately loaded page: follow those
+        for tag in soup.find_all(["iframe", "frame"]):
+            if tag.get("src"):
+                queue.insert(0, requests.compat.urljoin(url, tag["src"]))
+        for a_ in soup.find_all("a", href=True):
+            if re.search(r"rate|price|gold", a_["href"], re.I) and "fenegosida" in requests.compat.urljoin(url, a_["href"]):
+                queue.append(requests.compat.urljoin(url, a_["href"]))
+    if not found:
+        _bullion_debug("; ".join(errors), pages)
         raise RuntimeError("bullion: " + "; ".join(errors))
     if "fine_gold" in found and found["fine_gold"] < 10000:
-        _bullion_debug(f"implausible gold price {found}", text)
+        _bullion_debug(f"implausible gold price {found}", pages)
         raise RuntimeError(f"bullion: implausible gold price {found['fine_gold']}")
     fields, rows = read_rows("bullion.csv")
     for item, v in found.items():
