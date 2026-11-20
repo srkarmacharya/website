@@ -1,0 +1,40 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const papers = await getCollection('research');
+  return papers.map((p) => ({ params: { slug: p.id }, props: { p } }));
+}
+const { p } = Astro.props;
+const { Content } = await render(p);
+const d = p.data;
+---
+<Base title={d.plainTitle} description={d.summary}>
+  <article>
+    <p class="kicker"><a href="/research/">Research</a> · {d.journal}, {d.year}</p>
+    <h1 class="page-title">{d.plainTitle}</h1>
+    <p class="lede">{d.summary}</p>
+
+    <div class="prose">
+      {d.explainer ? <Content /> : <p class="muted">A plain-language explainer for this paper is coming soon. In the meantime, the paper is linked below.</p>}
+    </div>
+
+    <aside class="cite">
+      <h2 class="label">The paper</h2>
+      <p class="cite-title">{d.title}</p>
+      <p class="small muted">{d.authors}. <i>{d.citation}</i>.</p>
+      <p class="small"><a class="accent-link" href={`https://doi.org/${d.doi}`}>doi.org/{d.doi}</a>{d.license && <span class="muted"> · {d.license}</span>}</p>
+      <p class="small muted">This summary is my own plain-language reading of the published paper. For the full methods, results and caveats, please refer to the original.</p>
+    </aside>
+  </article>
+</Base>
+
+<style>
+  .kicker { margin: 40px 0 0; font-size: 13px; color: var(--muted); }
+  .kicker a { text-decoration: none; }
+  .page-title { margin-top: 8px; }
+  .cite { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line); }
+  .cite p { margin: 0 0 8px; }
+  .cite-title { font-family: var(--serif); font-size: 19px; }
+</style>

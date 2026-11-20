@@ -1,0 +1,108 @@
+---
+import Base from '../layouts/Base.astro';
+import PriceChart from '../components/PriceChart.astro';
+import { loadCategories, loadHeadlines } from '../lib/series';
+
+const cats = loadCategories();
+const news = loadHeadlines();
+const fmt = (v: number) => (v >= 1000 ? Math.round(v).toLocaleString('en-IN') : v.toFixed(2));
+
+// Latest value and change vs ~30 days earlier, for the summary tables
+function latest(cat: (typeof cats)[number]) {
+  const n = cat.dates.length;
+  return cat.series.map((s) => {
+    let i = n - 1; while (i >= 0 && s.values[i] === null) i--;
+    if (i < 0) return { name: s.name, unit: s.unit, value: null, change: null };
+    const target = new Date(cat.dates[i] + 'T00:00:00').getTime() - 30 * 864e5;
+    let j = i; while (j > 0 && new Date(cat.dates[j] + 'T00:00:00').getTime() > target) j--;
+    while (j < i && s.values[j] === null) j++;
+    const prev = s.values[j];
+    const v = s.values[i] as number;
+    return { name: s.name, unit: s.unit, value: v, change: prev && j < i ? ((v - prev) / prev) * 100 : null, date: cat.dates[i] };
+  });
+}
+---
+<Base title="Dashboard" wide description="A daily record of prices in Nepal: exchange rates, gold and silver, and Kalimati vegetable and fruit prices.">
+  <div class="intro">
+    <h1 class="page-title">Nepal, today</h1>
+    <p class="lede">A daily record of prices that shape household budgets in Nepal. It updates automatically every morning from official and market sources.</p>
+    <p class="small muted how">
+      <strong>How to read the charts:</strong> each line is <em>indexed</em> to 100 on the first day of the period you choose. A line at 110 means that price is 10% higher than at the start. This lets items with very different prices, like gold and silver, share one chart. Hover or tap a chart to see actual prices. Click a name in the legend to hide or show its line.
+    </p>
+  </div>
+
+  <div class="grid">
+    {cats.map((c) => <PriceChart cat={c} range="1Y" />)}
+  </div>
+
+  <section class="tables">
+    <h2 class="label">Latest prices</h2>
+    <div class="tgrid">
+      {cats.map((c) => (
+        <table>
+          <caption>{c.title}</caption>
+          <thead><tr><th scope="col">Item</th><th scope="col" class="num">Price (NPR)</th><th scope="col" class="num">30-day change</th></tr></thead>
+          <tbody>
+            {latest(c).length === 0 && <tr><td colspan="3" class="muted">Awaiting first update</td></tr>}
+            {latest(c).map((r) => (
+              <tr>
+                <th scope="row">{r.name}<span class="unit">{r.unit.replace('NPR ', '')}</span></th>
+                <td class="num">{r.value === null ? '–' : fmt(r.value)}</td>
+                <td class="num">{r.change === null ? '–' : `${r.change >= 0 ? '+' : ''}${r.change.toFixed(1)}%`}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ))}
+    </div>
+  </section>
+
+  <section class="news">
+    <h2 class="label">Economy headlines</h2>
+    {news.items.length === 0 ? (
+      <p class="muted small">Headlines appear after the first daily update.</p>
+    ) : (
+      <ul>
+        {news.items.slice(0, 12).map((h) => (
+          <li>
+            <a href={h.link} rel="noopener">{h.title}</a>
+            <span class="small muted"> · {h.source}{h.date && ` · ${new Date(h.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}`}</span>
+          </li>
+        ))}
+      </ul>
+    )}
+    <p class="small muted">Headlines link to the original publishers and are gathered automatically through Google News. Inclusion is not endorsement.</p>
+  </section>
+
+  <section class="sources small muted">
+    <h2 class="label">Sources and notes</h2>
+    <p><strong>Exchange rates:</strong> <a href="https://www.nrb.org.np/forex/">Nepal Rastra Bank</a> official buying rates, converted to NPR per single unit of each currency. The Indian rupee isn’t charted because it is pegged at 1.6 NPR.</p>
+    <p><strong>Gold and silver:</strong> daily rates set by the <a href="https://www.fenegosida.org/">Federation of Nepal Gold and Silver Dealers’ Association (FENEGOSIDA)</a>, per tola (11.66 g).</p>
+    <p><strong>Vegetables and fruits:</strong> daily average wholesale prices published by <a href="https://kalimatimarket.gov.np/">Kalimati Fruits and Vegetable Market Development Board</a>, Kathmandu. Units are per kg unless noted.</p>
+    <p>Data are collected automatically and may contain gaps or errors from the source. On days a source doesn’t publish, such as holidays, its lines simply pause. The full history is available as CSV files in this site’s <a href="https://github.com/srkarmacharya/website/tree/main/data">GitHub repository</a>.</p>
+  </section>
+</Base>
+
+<script>import '../scripts/charts.js';</script>
+
+<style>
+  .intro { max-width: 760px; }
+  .how { margin: -16px 0 32px; line-height: 1.6; }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .tables, .news, .sources { margin-top: 56px; }
+  .tgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 40px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  caption { text-align: left; font-family: var(--serif); font-size: 19px; padding-bottom: 6px; }
+  th, td { padding: 7px 0; border-bottom: 1px solid var(--line); text-align: left; font-weight: 400; }
+  thead th { font-size: 12px; color: var(--muted); }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .unit { display: block; font-size: 11px; color: var(--muted); }
+  .news ul { list-style: none; padding: 0; margin: 0 0 12px; }
+  .news li { padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .news li a { text-decoration: none; }
+  .sources p { max-width: 760px; }
+  .sources a { color: inherit; }
+  @media (max-width: 760px) {
+    .grid, .tgrid { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

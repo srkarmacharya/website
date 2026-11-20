@@ -1,0 +1,85 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../lib/site';
+
+const experience = [
+  { role: 'Socioeconomic Research Coordinator', org: 'CIMMYT', place: 'Biratnagar, Koshi Province', when: 'Jan 2024 – present',
+    what: 'Coordinating the ACIAR-funded Rupantar project across Nepal, India and Bangladesh: socio-economic research, stakeholder engagement, and monitoring and evaluation.' },
+  { role: 'Social Researcher (Consultant)', org: 'CIMMYT', place: 'Biratnagar, Koshi Province', when: 'Jun 2023 – Dec 2023',
+    what: 'Led and analysed 12 focus group discussions in eastern Nepal for the Rupantar project.' },
+  { role: 'Survey Lead and Data Analyst', org: 'Innovation Plus Pvt. Ltd.', place: 'Kathmandu', when: 'Jan 2022 – Jun 2023',
+    what: 'Ran surveys, analysis and reporting for impact assessments of SDC-funded agribusiness and farming programmes in Koshi Province.' },
+  { role: 'Lecturer and Course In-charge', org: 'Valley Krishi Campus', place: 'Lalitpur', when: 'Feb 2021 – Feb 2023',
+    what: 'Taught economics, farm management and agricultural marketing to BSc Agriculture students and supervised final-year theses.' },
+];
+const education = [
+  { degree: 'MSc, Agricultural Economics', org: 'Agriculture and Forestry University, Rampur', when: '2019 – 2022', note: 'Distinction' },
+  { degree: 'BSc, Agriculture', org: 'Agriculture and Forestry University, Rampur', when: '2014 – 2019', note: 'Distinction' },
+];
+---
+<Base title="About" description="About Saurya Karmacharya, a socio-economist working on rural livelihoods, crop diversification and agricultural information systems in Nepal.">
+  <div class="intro">
+    <img src="/img/saurya.jpg" alt="Portrait of Saurya Karmacharya" width="160" height="160" />
+    <div>
+      <h1 class="page-title">About</h1>
+      <div class="prose">
+        <p>I’m a socio-economist with a background in agricultural economics. I work at the point where farming, migration and markets meet in rural Nepal: what households grow, how they earn, where they get their information, and what happens to their food security when those choices change.</p>
+        <p>Since 2024 I have coordinated socio-economic research for the <strong>Rupantar</strong> project at CIMMYT. The project is funded by ACIAR and works across Nepal, India and Bangladesh, with a focus on scaling high-value farming pathways in Koshi Province. My work spans impact assessment, survey design, quantitative and qualitative analysis, and monitoring and evaluation. My tools are mostly R, Stata and Dedoose.</p>
+        <p>I still think of myself as a student of the subject. This site is where I explain the research I’m part of, write down what I think, and keep a daily record of prices that matter to households in Nepal.</p>
+        <p>Away from work, I play music. Some of it ends up on <a href={SITE.instagram}>Instagram</a>.</p>
+      </div>
+    </div>
+  </div>
+
+  <section class="cv">
+    <div class="cv-head">
+      <h2 class="label">Experience</h2>
+      <a class="inline-link small" href="/cv/Saurya_Karmacharya_CV.pdf">Download CV (PDF)</a>
+    </div>
+    {experience.map((e) => (
+      <div class="cv-row">
+        <p class="when small muted">{e.when}</p>
+        <div>
+          <p class="role">{e.role}</p>
+          <p class="small muted">{e.org} · {e.place}</p>
+          <p class="what">{e.what}</p>
+        </div>
+      </div>
+    ))}
+
+    <h2 class="label" style="margin-top: 40px">Education</h2>
+    {education.map((e) => (
+      <div class="cv-row">
+        <p class="when small muted">{e.when}</p>
+        <div>
+          <p class="role">{e.degree}</p>
+          <p class="small muted">{e.org} · {e.note}</p>
+        </div>
+      </div>
+    ))}
+
+    <h2 class="label" style="margin-top: 40px">Areas of work</h2>
+    <p class="what">Crop diversification · seed systems · agricultural information and extension · food security · gender and social inclusion · agricultural mechanisation · sustainable intensification · impact assessment and M&amp;E</p>
+
+    <h2 class="label" style="margin-top: 40px">Contact</h2>
+    <p class="what">
+      <a class="inline-link" href={`mailto:${SITE.email}`}>{SITE.email}</a> (personal) ·
+      <a class="inline-link" href={`mailto:${SITE.workEmail}`}>{SITE.workEmail}</a> (work)<br />
+      <a class="inline-link" href={SITE.linkedin}>LinkedIn</a> · <a class="inline-link" href={SITE.scholar}>Google Scholar</a>
+    </p>
+  </section>
+</Base>
+
+<style>
+  .intro { display: flex; flex-wrap: wrap; gap: 36px; align-items: flex-start; }
+  .intro img { width: 160px; height: 160px; border-radius: 999px; object-fit: cover; flex: 0 0 160px; margin-top: 56px; border: 1px solid var(--line); }
+  .intro > div { flex: 999 1 420px; min-width: 0; }
+  .cv { margin-top: 48px; }
+  .cv-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .cv-row { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 4px 24px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .cv-row p { margin: 0; }
+  .role { font-family: var(--serif); font-size: 19px; }
+  .what { margin: 6px 0 0; }
+  .when { padding-top: 4px; }
+  @media (max-width: 560px) { .cv-row { grid-template-columns: minmax(0, 1fr); } .intro img { margin-top: 24px; } }
+</style>

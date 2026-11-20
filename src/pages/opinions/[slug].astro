@@ -1,0 +1,23 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = (await getCollection('opinions')).filter((o) => !o.data.draft);
+  return posts.map((o) => ({ params: { slug: o.id }, props: { o } }));
+}
+const { o } = Astro.props;
+const { Content } = await render(o);
+---
+<Base title={o.data.title} description={o.data.summary}>
+  <article>
+    <p class="kicker"><a href="/opinions/">Opinions</a> · {o.data.date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+    <h1 class="page-title">{o.data.title}</h1>
+    <div class="prose"><Content /></div>
+  </article>
+</Base>
+<style>
+  .kicker { margin: 40px 0 0; font-size: 13px; color: var(--muted); }
+  .kicker a { text-decoration: none; }
+  .page-title { margin-top: 8px; }
+</style>

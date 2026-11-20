@@ -1,0 +1,18 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { SITE } from '../../lib/site';
+const papers = (await getCollection('research')).sort((a, b) => a.data.order - b.data.order);
+---
+<Base title="Research" description="Peer-reviewed research on crop diversification, farm information systems and food security in Nepal and the Eastern Gangetic Plains, explained in plain language.">
+  <h1 class="page-title">Research</h1>
+  <p class="lede">Peer-reviewed papers I have co-authored, each with a short plain-language explainer. The full citations and links to the original papers are on each page. A complete list is on <a class="inline-link" href={SITE.scholar}>Google Scholar</a>.</p>
+  {papers.map((p) => (
+    <article class="entry">
+      <h3><a href={`/research/${p.id}/`}>{p.data.plainTitle}</a></h3>
+      <p class="muted">{p.data.summary}</p>
+      <p class="meta"><i>{p.data.title}</i></p>
+      <p class="meta">{p.data.journal} · {p.data.year} · <a class="accent-link" href={`/research/${p.id}/`}>{p.data.explainer ? 'Explainer' : 'Details'}</a> · <a class="accent-link" href={`https://doi.org/${p.data.doi}`}>Paper</a></p>
+    </article>
+  ))}
+</Base>

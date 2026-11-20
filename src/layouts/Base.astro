@@ -1,0 +1,82 @@
+---
+import '../styles/global.css';
+import { SITE, NAV } from '../lib/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  wide?: boolean;
+}
+const { title, description = SITE.description, wide = false } = Astro.props;
+const fullTitle = title ? `${title} · ${SITE.name}` : SITE.name;
+const path = Astro.url.pathname;
+const canonical = new URL(path, Astro.site);
+const ogImage = new URL('/img/saurya.jpg', Astro.site);
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={ogImage} />
+  <meta name="twitter:card" content="summary" />
+  <meta name="theme-color" content="#141413" />
+  <script is:inline>
+    try {
+      const t = localStorage.getItem('theme');
+      if (t === 'light') document.documentElement.dataset.theme = 'light';
+    } catch (e) {}
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class={wide ? 'wrap-wide' : 'wrap'}>
+    <header class="site-header">
+      <a class="brand" href="/">{SITE.name}</a>
+      <nav class="nav" aria-label="Main">
+        {NAV.map((n) => (
+          <a href={n.href} aria-current={path.startsWith(n.href) ? 'page' : undefined}>{n.label}</a>
+        ))}
+        <button class="theme-toggle" type="button" id="theme-toggle" aria-label="Switch colour theme">Light</button>
+      </nav>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <span>© {new Date().getFullYear()} {SITE.name} · Biratnagar &amp; Kathmandu, Nepal</span>
+      <nav aria-label="Elsewhere">
+        <a href={`mailto:${SITE.email}`}>Email</a>
+        <a href={SITE.linkedin} rel="me">LinkedIn</a>
+        <a href={SITE.scholar} rel="me">Google Scholar</a>
+        <a href={SITE.instagram} rel="me">Instagram</a>
+      </nav>
+    </footer>
+  </div>
+
+  <script is:inline>
+    (function () {
+      const btn = document.getElementById('theme-toggle');
+      const root = document.documentElement;
+      const label = () => { btn.textContent = root.dataset.theme === 'light' ? 'Dark' : 'Light'; };
+      label();
+      btn.addEventListener('click', () => {
+        if (root.dataset.theme === 'light') { delete root.dataset.theme; } else { root.dataset.theme = 'light'; }
+        try { localStorage.setItem('theme', root.dataset.theme === 'light' ? 'light' : 'dark'); } catch (e) {}
+        label();
+        document.dispatchEvent(new CustomEvent('themechange'));
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('opinions')).filter((o) => !o.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+<Base title="Opinions" description="Opinion pieces by Saurya Karmacharya on Nepal's economy, agriculture and rural livelihoods.">
+  <h1 class="page-title">Opinions</h1>
+  <p class="lede">Argued views on Nepal’s economy, agriculture and rural livelihoods. These are my own and not those of my employer.</p>
+  {posts.length === 0 ? (
+    <p class="muted">The first pieces are being written. Until then, the <a class="inline-link" href="/research/">research explainers</a> and the <a class="inline-link" href="/dashboard/">dashboard</a> are the best places to start.</p>
+  ) : posts.map((o) => (
+    <a class="row-link" href={`/opinions/${o.id}/`}>
+      <span style="font-family: var(--serif); font-size: 20px">{o.data.title}</span>
+      <span class="small muted">{o.data.date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+    </a>
+  ))}
+</Base>

@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro';
+import PriceChart from '../components/PriceChart.astro';
+import { getCollection } from 'astro:content';
+import { loadCategories } from '../lib/series';
+import { SITE } from '../lib/site';
+
+const papers = (await getCollection('research')).sort((a, b) => a.data.order - b.data.order);
+const opinions = (await getCollection('opinions')).filter((o) => !o.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).slice(0, 3);
+const cats = loadCategories();
+const updated = cats.map((c) => c.updated).filter(Boolean).sort().pop();
+---
+<Base>
+  <section class="hero">
+    <img src="/img/saurya.jpg" alt="Portrait of Saurya Karmacharya" width="128" height="128" />
+    <div>
+      <h1>A student of rural livelihoods, asking how Nepal’s farmers, migrants and markets <em>shape one another</em>.</h1>
+      <p class="muted">
+        Socioeconomic Research Coordinator at CIMMYT, Nepal.<br />
+        I explain some of my work in plain language, write <a class="inline-link" href="/opinions/">opinions</a>{' '}(and keep a <a class="inline-link" href="/dashboard/">daily record</a> of Nepal’s prices).{' '}Reach me by <a class="inline-link" href={`mailto:${SITE.email}`}>email</a>, or find me on{' '}<a class="inline-link" href={SITE.linkedin}>LinkedIn</a> and <a class="inline-link" href={SITE.scholar}>Google Scholar</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2 class="label">Research</h2>
+    {papers.slice(0, 3).map((p) => (
+      <article class="entry">
+        <h3><a href={`/research/${p.id}/`}>{p.data.plainTitle}</a></h3>
+        <p class="muted">{p.data.summary}</p>
+        <p class="meta">{p.data.journal} · {p.data.year} · <a class="accent-link" href={`/research/${p.id}/`}>Explainer</a> · <a class="accent-link" href={`https://doi.org/${p.data.doi}`}>Paper</a></p>
+      </article>
+    ))}
+    <p class="more"><a href="/research/">All {papers.length} papers →</a></p>
+  </section>
+
+  <section class="block">
+    <h2 class="label">Nepal, today</h2>
+    <p class="small muted note">Each line starts at 100 a year ago, so prices on very different scales can share a chart. Hover for actual prices.</p>
+    <div class="grid">
+      {cats.map((c) => <PriceChart cat={c} compact range="1Y" />)}
+    </div>
+    <p class="small muted">{updated ? `Last updated ${updated}` : 'Updated daily'} · <a href="/dashboard/">Open the dashboard →</a></p>
+  </section>
+
+  {opinions.length > 0 && (
+    <section class="block">
+      <h2 class="label">Opinions</h2>
+      {opinions.map((o) => (
+        <a class="row-link" href={`/opinions/${o.id}/`}>
+          <span class="op-title">{o.data.title}</span>
+          <span class="small muted">{o.data.date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}</span>
+        </a>
+      ))}
+    </section>
+  )}
+</Base>
+
+<script>import '../scripts/charts.js';</script>
+
+<style>
+  .hero { padding: 64px 0 56px; display: flex; flex-wrap: wrap; gap: 36px; align-items: flex-start; }
+  .hero img { width: 128px; height: 128px; border-radius: 999px; object-fit: cover; flex: 0 0 128px; border: 1px solid var(--line); }
+  .hero > div { flex: 999 1 420px; min-width: 0; }
+  .hero h1 { margin: 0 0 18px; font-size: 30px; line-height: 1.3; font-weight: 400; }
+  .hero h1 em { color: var(--accent); }
+  .hero p { margin: 0; }
+  .block { padding-bottom: 56px; }
+  .more { margin: 18px 0 0; font-size: 14px; }
+  .more a { text-decoration: none; color: var(--muted); }
+  .note { margin: 0 0 18px; }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-bottom: 12px; }
+  .grid a { text-decoration: none; }
+  .op-title { font-family: var(--serif); font-size: 20px; }
+  @media (max-width: 640px) {
+    .grid { grid-template-columns: minmax(0, 1fr); }
+    .hero h1 { font-size: 26px; }
+  }
+</style>

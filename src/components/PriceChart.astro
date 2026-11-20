@@ -1,0 +1,42 @@
+---
+import type { Category } from '../lib/series';
+interface Props { cat: Category; compact?: boolean; range?: string }
+const { cat, compact = false, range = '1Y' } = Astro.props;
+const payload = JSON.stringify({ dates: cat.dates, series: cat.series });
+const ranges = ['1M', '6M', '1Y', 'All'];
+---
+<figure class:list={['chart', { compact }]} data-range={range} aria-labelledby={`t-${cat.id}`}>
+  <div class="chart-head">
+    <figcaption>
+      <span class="chart-title" id={`t-${cat.id}`}>{cat.title}</span>
+      <span class="chart-sub">{cat.subtitle} · <a href={cat.sourceUrl} rel="noopener">{cat.source}</a></span>
+    </figcaption>
+    {!compact && (
+      <div class="ranges" role="group" aria-label={`Time range for ${cat.title}`}>
+        {ranges.map((r) => <button type="button" data-r={r} aria-pressed={r === range ? 'true' : 'false'}>{r}</button>)}
+      </div>
+    )}
+  </div>
+  <div class="plot" role="img" aria-label={`${cat.title}: prices indexed to 100 at the start of the period`}></div>
+  <div class="legend"></div>
+  <script type="application/json" class="chart-data" set:html={payload} />
+  {cat.dates.length === 0 && <p class="empty">No data yet. This chart fills in after the first daily update.</p>}
+</figure>
+
+<style>
+  .chart { margin: 0; background: var(--bg); padding: 18px 20px 16px; min-width: 0; }
+  .chart-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 16px; }
+  figcaption { display: flex; flex-direction: column; }
+  .chart-title { font-family: var(--serif); font-size: 20px; }
+  .compact .chart-title { font-size: 18px; }
+  .chart-sub { font-size: 12px; color: var(--muted); }
+  .chart-sub a { text-decoration: none; }
+  .ranges { display: flex; gap: 4px; font-size: 13px; }
+  .ranges button { background: none; border: 0; font: inherit; color: var(--muted); padding: 4px 6px; min-height: 32px; cursor: pointer; }
+  .ranges button[aria-pressed='true'] { color: var(--fg); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 5px; }
+  .plot { position: relative; margin-top: 10px; height: 230px; }
+  .compact .plot { height: 140px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 2px 10px; margin-top: 8px; font-size: 12px; }
+  .empty { font-size: 13px; color: var(--muted); margin: -120px 0 90px; text-align: center; }
+  .compact .empty { margin: -80px 0 50px; }
+</style>
