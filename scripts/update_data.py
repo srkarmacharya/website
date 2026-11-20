@@ -139,19 +139,41 @@ def parse_bullion(text: str) -> dict[str, float]:
 
 
 FENEGOSIDA_API = "https://api.fenegosida.org/api/website/v1/Dashboard/"
+MONTHS = {m: i for i, m in enumerate(["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"], 1)}
 
 
-def _save_fenegosida_api() -> None:
-    """Keep a copy of FENEGOSIDA's own JSON feeds (today + rate history) for inspection/backfill."""
-    d = DATA / "_debug" / "fenegosida"
-    d.mkdir(parents=True, exist_ok=True)
-    for name, path in [("today", "today"), ("chart_7", "WeeklyChartRate?weekmonthyear=7"),
-                       ("chart_30", "WeeklyChartRate?weekmonthyear=30"), ("chart_365", "WeeklyChartRate?weekmonthyear=365")]:
-        try:
-            r = requests.get(FENEGOSIDA_API + path, headers={**UA, "Referer": "https://www.fenegosida.org/"}, timeout=30)
-            (d / f"{name}.json").write_text(f"HTTP {r.status_code}\n{r.text[:20000]}", encoding="utf-8")
-        except requests.RequestException as e:
-            (d / f"{name}.json").write_text(f"ERROR {e}", encoding="utf-8")
+def _fenegosida_json(path: str):
+    r = requests.get(FENEGOSIDA_API + path, headers={**UA, "Referer": "https://www.fenegosida.org/"}, timeout=40)
+    r.raise_for_status()
+    return r.json()
+
+
+def fetch_bullion_api() -> list[dict]:
+    """FENEGOSIDA's own JSON feeds: 'today' (official daily rates) and a 365-day history."""
+    rows: list[dict] = []
+    # one year of daily history: {"goldData": [{"date": "21", "month": "Oct", "year": "2026", "gm": ..., "tola": ...}], "silverData": [...]}
+    hist = _fenegosida_json("WeeklyChartRate?weekmonthyear=365")
+    for key, series in (hist.items() if isinstance(hist, dict) else []):
+        item = "fine_gold" if "gold" in key.lower() else "silver" if "silver" in key.lower() else None
+        if not item or not isinstance(series, list):
+            continue
+        for p in series:
+            try:
+                d = dt.date(int(p["year"]), MONTHS[str(p["month"])[:3].lower()], int(p["date"]))
+            except (KeyError, ValueError):
+                continue
+            for unit, field in (("tola", "tola"), ("10g", "gm")):
+                if p.get(field):
+                    rows.append({"date": d.isoformat(), "item": item, "unit": unit, "price": f"{float(p[field]):g}"})
+    # today's official rates: rateType is in Nepali, e.g. "छापावाल सुन (१ तोला)", "असली चाँदी दर (१० ग्राम)"
+    for t in _fenegosida_json("today"):
+        name = t.get("rateType", "")
+        item = "fine_gold" if "सुन" in name else "silver" if "चाँदी" in name else None
+        unit = "tola" if "तोला" in name else "10g" if "ग्राम" in name else None
+        if item and unit and t.get("todayBaseRatePerGram"):
+            when = dt.datetime.fromisoformat(t["todayDate"].replace("Z", "+00:00")).astimezone(NPT).date()
+            rows.append({"date": when.isoformat(), "item": item, "unit": unit, "price": f"{float(t['todayBaseRatePerGram']):g}"})
+    return rows
 
 
 def parse_fenegosida_cards(text: str) -> dict[str, float]:
@@ -196,23 +218,28 @@ def _render_with_browser(url: str) -> tuple[dict[str, dict[str, float]], str, li
 
 
 def update_bullion() -> str:
-    _save_fenegosida_api()
-    url = BULLION_URLS[0]
-    prices, text, json_urls = _render_with_browser(url)
-    pages = [(url + " (rendered text)", text), ("JSON requests seen", "\n".join(json_urls))]
-    found = prices.get("tola", {})
-    if not found:
-        _bullion_debug(f"no tola prices matched; parsed={prices}", pages)
-        raise RuntimeError(f"bullion: no tola prices matched (parsed: {prices})")
-    if "silver" in found and found.get("fine_gold", 0) < found["silver"] * 20:
-        _bullion_debug(f"gold/silver ratio implausible: {prices}", pages)
-        raise RuntimeError(f"bullion: implausible prices {prices}")
+    try:
+        new = fetch_bullion_api()
+        source = "FENEGOSIDA API"
+    except Exception as e:  # fall back to reading the rendered web page
+        print(f"     bullion API failed ({type(e).__name__}: {e}); trying the web page", file=sys.stderr)
+        new, source = [], "web page"
+    if not any(r["unit"] == "tola" for r in new):
+        url = BULLION_URLS[0]
+        prices, text, json_urls = _render_with_browser(url)
+        if not prices.get("tola"):
+            _bullion_debug(f"API and page both failed; parsed={prices}", [(url, text), ("JSON requests", "\n".join(json_urls))])
+            raise RuntimeError(f"bullion: no prices from API or page (parsed: {prices})")
+        new = [{"date": TODAY.isoformat(), "item": i, "unit": u, "price": f"{v:g}"} for u, items in prices.items() for i, v in items.items()]
+        source = "web page"
+    latest = max(r["date"] for r in new)
+    today_tola = {r["item"]: float(r["price"]) for r in new if r["date"] == latest and r["unit"] == "tola"}
+    if "silver" in today_tola and today_tola.get("fine_gold", 0) < today_tola["silver"] * 20:
+        raise RuntimeError(f"bullion: implausible prices {today_tola}")
     fields, rows = read_rows("bullion.csv")
-    for unit, items in prices.items():
-        for item, v in items.items():
-            rows.append({"date": TODAY.isoformat(), "item": item, "unit": unit, "price": f"{v:g}"})
-    write_rows("bullion.csv", fields, rows, ("date", "item", "unit"))
-    return f"bullion: {prices}"
+    rows.extend(new)
+    total = write_rows("bullion.csv", fields, rows, ("date", "item", "unit"))
+    return f"bullion ({source}): latest {latest} {today_tola}; {total} rows total"
 
 
 # ---------------------------------------------------------------- Kalimati
