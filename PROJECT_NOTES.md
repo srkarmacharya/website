@@ -14,7 +14,7 @@ The daily data update ran successfully, with a green ✓ for all sources.
 
 | Part | Status |
 |---|---|
-| Home, About, Research (5 explainers), Opinions (empty), Dashboard | ✅ Live |
+| Home, About, Research (5 explainers), Opinions (4 pieces), Dashboard | ✅ Live |
 | Exchange rates (NRB) | ✅ About 13 months of history, updated daily |
 | Gold and silver (FENEGOSIDA) | ✅ 1 year of history from FENEGOSIDA's own feed, updated daily |
 | Kalimati vegetables and fruits | ✅ Collecting since 20 Nov 2026. Lines appear from the 2nd day |
@@ -24,7 +24,8 @@ The daily data update ran successfully, with a green ✓ for all sources.
 ## Open to-dos
 
 - [ ] **Saurya:** proofread the 5 research explainers (`src/content/research/*.md`) for accuracy, and decide whether to state his role on each paper.
-- [ ] **Saurya:** write the first opinion piece (copy `src/content/opinions/example-draft.md` and set `draft: false`).
+- [ ] **Saurya:** proofread the 4 Opinions pieces, and confirm their dates (the original blogs show day and month but no year, so the years are inferred).
+- [ ] **Saurya:** check with CIMMYT/Rupantar comms that plain-language versions with a link back are fine (an unchanged copy may need permission).
 - [ ] Optional: remove the custom domain from Blogger (Blogger → Settings → Custom domain).
 - [ ] Optional: delete the leftover Google verification record `mipgyfxqwl5…` (CNAME) in Cloudflare DNS.
 - [ ] Optional: redirect `sauryakarmacharya.com.np` → `www.` (Cloudflare Redirect Rules). Today both addresses serve the site, and the pages declare `www` as their main (canonical) address.
@@ -75,6 +76,17 @@ A GitHub Action, **"Update dashboard data"**, runs daily at 06:47 UTC (12:32 Nep
 - **Public CV:** `public/cv/Saurya_Karmacharya_CV.pdf`, trimmed from the August 2026 CV. The phone number and referees' contact details are removed, and it ends "References available on request".
 - **Photo:** `public/img/saurya.jpg` (480×480 crop).
 
+### Opinions (`src/content/opinions/`)
+Plain-language rewrites of Saurya's own Rupantar blog posts. Each links to its original. The `kind: project` field shows a **Project blog** tag; `kind: opinion` is a personal view.
+| File | Title on site | Original (rupantarfoodsystems.com) | Date used | Kind |
+|---|---|---|---|---|
+| `dairy-farming-sunsari.md` | More milk, same old market… | Scaling Up Improved Dairy Farming: Initial Lessons from Sunsari | 11 Nov 2025 (year inferred) | project |
+| `mechanization-migration-morang.md` | Machines in the fields, young people on the move… | The Nexus of Mechanization and Out-Migration… Morang | 2 Dec 2025 (year inferred) | project |
+| `gulf-conflict-nepal-food-system.md` | Why a war far away could reach a farmer's field in Nepal | Why a Conflict Thousands of Miles Away Could Shake Nepal's Food System | 19 Mar 2026 (year inferred) | opinion (written in a personal capacity) |
+| `zero-tillage-maize-pandav.md` | Sowing without ploughing: one farmer's first try | Farming Through Uncertainty: A Smallholder's Experience in Rupantar | 24 Mar 2026 (year inferred) | project |
+
+To add one: copy `example-draft.md`, fill in `title`, `date`, `summary`, `kind`, and `originalTitle`/`originalUrl`/`originalSource` if it was first published elsewhere, then set `draft: false`.
+
 ### Research explainers (`src/content/research/`)
 | File | Plain-language title | Paper |
 |---|---|---|
@@ -104,6 +116,11 @@ A GitHub Action, **"Update dashboard data"**, runs daily at 06:47 UTC (12:32 Nep
 ---
 
 ## Change log
+
+### 20 Nov 2026 (evening)
+- Added 4 Opinions pieces: plain-language rewrites of Saurya's Rupantar blogs, with a "Project blog" tag and a link back to each original.
+- The Opinions page now shows summaries and tags, and the home page links to all opinions.
+- Confirmed that the daily update uses no AI: it's a fixed-rule Python script run by GitHub Actions.
 
 ### 20 Nov 2026
 - Decided on hosting: a static site in his own GitHub repo, deployed by Cloudflare. The Oracle VM isn't needed.

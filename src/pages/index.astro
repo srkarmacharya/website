@@ -49,10 +49,11 @@ const updated = cats.map((c) => c.updated).filter(Boolean).sort().pop();
       <h2 class="label">Opinions</h2>
       {opinions.map((o) => (
         <a class="row-link" href={`/opinions/${o.id}/`}>
-          <span class="op-title">{o.data.title}</span>
+          <span class="op-title">{o.data.title}{o.data.kind === 'project' && <> <span class="tag">Project blog</span></>}</span>
           <span class="small muted">{o.data.date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}</span>
         </a>
       ))}
+      <p class="more"><a href="/opinions/">All opinions →</a></p>
     </section>
   )}
 </Base>

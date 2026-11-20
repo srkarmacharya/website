@@ -25,6 +25,11 @@ const opinions = defineCollection({
     date: z.coerce.date(),
     summary: z.string().optional(),
     draft: z.boolean().default(false),
+    // 'project' = written for a project (e.g. Rupantar); 'opinion' = personal view
+    kind: z.enum(['opinion', 'project']).default('opinion'),
+    originalTitle: z.string().optional(),
+    originalUrl: z.string().url().optional(),
+    originalSource: z.string().optional(),
   }),
 });
 

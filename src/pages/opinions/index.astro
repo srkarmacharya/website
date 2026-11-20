@@ -6,13 +6,20 @@ const posts = (await getCollection('opinions')).filter((o) => !o.data.draft)
 ---
 <Base title="Opinions" description="Opinion pieces by Saurya Karmacharya on Nepal's economy, agriculture and rural livelihoods.">
   <h1 class="page-title">Opinions</h1>
-  <p class="lede">Argued views on Nepal’s economy, agriculture and rural livelihoods. These are my own and not those of my employer.</p>
+  <p class="lede">Writing on Nepal’s economy, agriculture and rural livelihoods, in plain language. Pieces marked <span class="tag">Project blog</span> were first written for the projects I work on and are rewritten here; links to the originals are on each page. Everything else is my personal view, not my employer’s.</p>
   {posts.length === 0 ? (
     <p class="muted">The first pieces are being written. Until then, the <a class="inline-link" href="/research/">research explainers</a> and the <a class="inline-link" href="/dashboard/">dashboard</a> are the best places to start.</p>
   ) : posts.map((o) => (
-    <a class="row-link" href={`/opinions/${o.id}/`}>
-      <span style="font-family: var(--serif); font-size: 20px">{o.data.title}</span>
-      <span class="small muted">{o.data.date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+    <a class="post" href={`/opinions/${o.id}/`}>
+      <span class="post-title">{o.data.title}</span>
+      {o.data.summary && <span class="post-sum muted">{o.data.summary}</span>}
+      <span class="small muted">{o.data.date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}{o.data.kind === 'project' && <> · <span class="tag">Project blog</span></>}</span>
     </a>
   ))}
 </Base>
+
+<style>
+  .post { display: block; text-decoration: none; padding: 22px 0; border-bottom: 1px solid var(--line); }
+  .post-title { display: block; font-family: var(--serif); font-size: 22px; line-height: 1.3; margin-bottom: 6px; }
+  .post-sum { display: block; font-size: 15px; margin-bottom: 6px; }
+</style>

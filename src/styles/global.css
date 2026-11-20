@@ -114,3 +114,5 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 500; letter-spacing: -0.01e
 .legend .lg { display: inline-flex; align-items: center; gap: 6px; background: none; border: 0; padding: 4px 0; font: inherit; color: var(--muted); cursor: pointer; min-height: 28px; }
 .legend .lg[aria-pressed='false'] { opacity: 0.45; text-decoration: line-through; }
 .legend .sw { width: 12px; height: 3px; border-radius: 2px; display: inline-block; }
+
+.tag { display: inline-block; font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent); border: 1px solid var(--line); border-radius: 999px; padding: 0 8px; line-height: 1.8; vertical-align: 1px; }

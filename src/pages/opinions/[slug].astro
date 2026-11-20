@@ -11,13 +11,21 @@ const { Content } = await render(o);
 ---
 <Base title={o.data.title} description={o.data.summary}>
   <article>
-    <p class="kicker"><a href="/opinions/">Opinions</a> · {o.data.date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+    <p class="kicker"><a href="/opinions/">Opinions</a>{o.data.kind === 'project' && <> · <span class="tag">Project blog</span></>} · {o.data.date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
     <h1 class="page-title">{o.data.title}</h1>
+    {o.data.summary && <p class="lede">{o.data.summary}</p>}
     <div class="prose"><Content /></div>
+    {o.data.originalUrl && (
+      <aside class="orig small muted">
+        {o.data.kind === 'project' ? 'A plain-language version of a blog I wrote for the project' : 'A plain-language version of a piece first published'}
+        {' '}on the <a class="inline-link" href={o.data.originalUrl}>{o.data.originalSource ?? 'original site'}</a>{o.data.originalTitle && <>: <i>{o.data.originalTitle}</i></>}. The original has the full references.
+      </aside>
+    )}
   </article>
 </Base>
 <style>
   .kicker { margin: 40px 0 0; font-size: 13px; color: var(--muted); }
   .kicker a { text-decoration: none; }
   .page-title { margin-top: 8px; }
+  .orig { margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--line); }
 </style>
