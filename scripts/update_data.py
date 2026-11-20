@@ -138,42 +138,81 @@ def parse_bullion(text: str) -> dict[str, float]:
     return found
 
 
-def _render_with_browser(url: str) -> tuple[str, list[str]]:
-    """FENEGOSIDA's site is a JavaScript app: load it in headless Chromium and return
-    the visible text, plus the URLs of any JSON responses (to help find its API later)."""
+FENEGOSIDA_API = "https://api.fenegosida.org/api/website/v1/Dashboard/"
+
+
+def _save_fenegosida_api() -> None:
+    """Keep a copy of FENEGOSIDA's own JSON feeds (today + rate history) for inspection/backfill."""
+    d = DATA / "_debug" / "fenegosida"
+    d.mkdir(parents=True, exist_ok=True)
+    for name, path in [("today", "today"), ("chart_7", "WeeklyChartRate?weekmonthyear=7"),
+                       ("chart_30", "WeeklyChartRate?weekmonthyear=30"), ("chart_365", "WeeklyChartRate?weekmonthyear=365")]:
+        try:
+            r = requests.get(FENEGOSIDA_API + path, headers={**UA, "Referer": "https://www.fenegosida.org/"}, timeout=30)
+            (d / f"{name}.json").write_text(f"HTTP {r.status_code}\n{r.text[:20000]}", encoding="utf-8")
+        except requests.RequestException as e:
+            (d / f"{name}.json").write_text(f"ERROR {e}", encoding="utf-8")
+
+
+def parse_fenegosida_cards(text: str) -> dict[str, float]:
+    """Current layout: '... Gold 4.74% Nrs 210,390 Silver 6.75% Nrs 2,666.5 ...'"""
+    t = re.sub(r"\s+", " ", text.translate(DEV_DIGITS))
+    out = {}
+    for item, label in (("fine_gold", "Gold"), ("silver", "Silver")):
+        m = re.search(label + r"\s+-?[\d.]+\s*%\s*(?:Nrs|Rs|रु)\.?\s*([\d,]+(?:\.\d+)?)", t)
+        if m and (v := to_number(m.group(1))):
+            out[item] = v
+    return out
+
+
+def _render_with_browser(url: str) -> tuple[dict[str, dict[str, float]], str, list[str]]:
+    """FENEGOSIDA's site is a JavaScript app: load it in headless Chromium, switch the
+    unit toggle to each of Tola and 10g, and read the prices shown."""
     from playwright.sync_api import sync_playwright  # installed in the GitHub workflow
 
     json_urls: list[str] = []
+    prices: dict[str, dict[str, float]] = {}
     with sync_playwright() as p:
         browser = p.chromium.launch(executable_path=os.environ.get("CHROMIUM_PATH") or None)
         page = browser.new_page(user_agent=UA["User-Agent"])
         page.on("response", lambda r: json_urls.append(r.url) if "json" in (r.headers.get("content-type") or "") else None)
         page.goto(url, wait_until="networkidle", timeout=60000)
         try:
-            page.wait_for_function("() => /tola/i.test(document.body.innerText)", timeout=20000)
+            page.wait_for_function("() => /Nrs|tola/i.test(document.body.innerText)", timeout=20000)
         except Exception:
             pass
         text = page.inner_text("body")
+        for unit, label in (("tola", "Tola"), ("10g", "10g")):
+            try:
+                page.get_by_text(label, exact=True).first.click(timeout=5000)
+                page.wait_for_timeout(1500)
+                found = parse_fenegosida_cards(page.inner_text("body"))
+                if found:
+                    prices[unit] = found
+            except Exception:
+                continue
         browser.close()
-    return text, json_urls
+    return prices, text, json_urls
 
 
 def update_bullion() -> str:
+    _save_fenegosida_api()
     url = BULLION_URLS[0]
-    text, json_urls = _render_with_browser(url)
-    found = parse_bullion(text)
+    prices, text, json_urls = _render_with_browser(url)
     pages = [(url + " (rendered text)", text), ("JSON requests seen", "\n".join(json_urls))]
+    found = prices.get("tola", {})
     if not found:
-        _bullion_debug("rendered page loaded but no prices matched", pages)
-        raise RuntimeError(f"bullion: no prices matched in rendered page ({len(text)} chars)")
-    if "fine_gold" in found and found["fine_gold"] < 10000:
-        _bullion_debug(f"implausible gold price {found}", pages)
-        raise RuntimeError(f"bullion: implausible gold price {found['fine_gold']}")
+        _bullion_debug(f"no tola prices matched; parsed={prices}", pages)
+        raise RuntimeError(f"bullion: no tola prices matched (parsed: {prices})")
+    if "silver" in found and found.get("fine_gold", 0) < found["silver"] * 20:
+        _bullion_debug(f"gold/silver ratio implausible: {prices}", pages)
+        raise RuntimeError(f"bullion: implausible prices {prices}")
     fields, rows = read_rows("bullion.csv")
-    for item, v in found.items():
-        rows.append({"date": TODAY.isoformat(), "item": item, "unit": "tola", "price": f"{v:.0f}"})
+    for unit, items in prices.items():
+        for item, v in items.items():
+            rows.append({"date": TODAY.isoformat(), "item": item, "unit": unit, "price": f"{v:g}"})
     write_rows("bullion.csv", fields, rows, ("date", "item", "unit"))
-    return f"bullion: {', '.join(f'{k}={v:,.0f}' for k, v in found.items())}"
+    return f"bullion: {prices}"
 
 
 # ---------------------------------------------------------------- Kalimati

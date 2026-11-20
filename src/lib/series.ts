@@ -93,7 +93,6 @@ function currencies(): Category {
 // ---------- Bullion (FENEGOSIDA) ----------
 const BULLION = [
   { key: 'fine_gold', name: 'Fine gold' },
-  { key: 'tejabi_gold', name: 'Tejabi gold' },
   { key: 'silver', name: 'Silver' },
 ];
 
