@@ -1,10 +1,10 @@
 ---
 plainTitle: "Who farmers listen to, and why it shapes what they grow"
 title: "Information matters: how does access to agricultural knowledge systems shape the agricultural landscape in South Asia?"
-authors: "Karmacharya S and co-authors"
+authors: "Timsina P, Chaudhary A, Karki E, Chakma KR, Rana G, Karmacharya S, Ghosh A, Das KK, Roy D, Das S, Goswami P, Nandi R, Jackson T"
 journal: "The Journal of Agricultural Education and Extension"
 year: 2026
-citation: "The Journal of Agricultural Education and Extension (2026)"
+citation: "The Journal of Agricultural Education and Extension (2026), 1–27 (published online)"
 doi: "10.1080/1389224X.2026.2726147"
 summary: "Thirty-six focus groups with men and women farmers show that advice travels mostly through neighbours and input sellers, and that these relationships can open or close the door to new livelihoods."
 order: 5
