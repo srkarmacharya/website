@@ -2,12 +2,12 @@
 
 Personal website of Saurya Karmacharya: research explainers, opinions, and a daily dashboard of prices in Nepal.
 
-Built with [Astro](https://astro.build) as a static site. Hosted on Cloudflare Pages, which rebuilds the site automatically whenever this repository changes.
+Built with [Astro](https://astro.build) as a static site. Hosted on Cloudflare Workers (static assets, configured in `wrangler.jsonc`), which rebuilds and redeploys automatically whenever this repository changes.
 
 ## How it fits together
 
 ```
-GitHub repo ──push──▶ Cloudflare Pages builds `npm run build` ──▶ www.sauryakarmacharya.com.np
+GitHub repo ──push──▶ Cloudflare Workers Builds: `npm run build` + `npx wrangler deploy` ──▶ www.sauryakarmacharya.com.np
      ▲
      └── GitHub Action (daily, 12:32 Nepal time) fetches new prices into data/ and commits them
 ```
