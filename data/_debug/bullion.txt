@@ -1,35 +1,159 @@
-2026-11-20T16:48:04.730489+05:45
-https://www.fenegosida.org/: HTTP 200, no prices; https://www.fenegosida.org/rate-history.php: HTTP 200, no prices
+2026-11-20T16:50:32.049912+05:45
+rendered page loaded but no prices matched
 
-===== https://www.fenegosida.org/ =====
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Federation of Nepal Gold & Silver Dealers's Association</title>
-    <script type="module" crossorigin src="/assets/index-BKOvvj1h.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CEQTeOkz.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
-</html>
+===== https://www.fenegosida.org/ (rendered text) =====
+Naxal, Kathmandu, Nepal
+01-4532270 / 01-4532271
+info@fenegosida.org
+UPDATED
+4 मंसिर
+10:36:39 AM
+10g
+Tola
+Gold
+4.74%
+Nrs
+210,390
+Silver
+6.75%
+Nrs
+2,666.5
+Latest Notice
+असार २९, २०८३ - होटल याक एण्ड येतीमा "एएमएल सुरक्षा" कार्यक्रम सम्पन्न, तीन महासंघको सहभागिताRead more →
+HOME
+ABOUT US
+MEMBERS
+RATES
+TRAINING
+DOWNLOADS
+NEWS
+GALLERY
+CONTACT
+नेपाल सुनचाँदी व्यवसायी महासंघको सहयोग, राहत कोषमा रु. एक करोड एघार लाख एघार हजार एक सय एघार हस्तान्तरण
+
+रसुवाको भोटेकोशी क्षेत्रमा आएको विनाशकारी बाढीबाट प्रभावितहरूको राहत, उद्धार तथा क्षेत्रको पुनर्निर्माणमा सहयोग पुर्‍याउने उद्देश्यले नेपाल सुनचाँदी व्यवसायी महासंघले प्रधानमन्त्री दैवी प्रकोप उद्धार कोषमा सहयोग रकम हस्तान्तरण गरेको छ ।
+
+Published on भदौ २४, २०८३
+
+MESSAGE
+President's Message
+
+नेपाल सुनचाँदी व्यवसायी महासंघ, मुलुकभरका सुनचाँदीको पेसा व्यवसायमा आबद्ध व्यवसायीहरूको साझा संस्था हो । सुनचाँदी क्षेत्रमा आबद्ध व्यवसायीको हक अधिकारको सुनिश्चितता तथा सुनचाँदीका गरगहनाको खरिदबिक्री एवं कारोबारमा देखा परेका समस्यालाई समाधान गर्ने यसको प्रमुख उद्देश्य रहेको छ । सुनचाँदी व्यवसायी सँघ हुँदै महासंघमा परिणत भए पश्चात हामीले अहिले सुनचाँदी व्यवसायी महासंघको चौथो महाअधिवेशन सम्पन्न गरी नयाँ नेतृत्वकासाथ कार्यारम्भ गरेका छौं । व्यवसायिक एकता, कच्चा पदार्थको पर्याप्त आपूर्ति ब्यवस्था, शान्तिसुरक्षा  र यसको सुनिश्चितता नै आजको प्रमुख आवश्यकता हो । 
+ 
+सुनचाँदीको ब्यवसायमा सरकार, उपभोक्ता, ब्यवसायी र कालिगढको चौतर्फि सम्वन्ध रहेको हुन्छ । उपभोक्तालाई सुरक्षित र गुणस्तरीय सेवाको उपलब्धता, ब्यवसायीलाई ब्यवसायिक सुरक्षा एवं अधिकार र प्रतिफल, कालिगढलाई उपयुक्त रोजगारी र आयको ब्यवस्था तथा सरकारलाई राजस्व अभिवृद्धि र अर्थतन्त्रमा टेवा पुग्ने काम यो ब्यवसायवाट भैरहेको छ । मेरो नेतृत्वमा रहेको हाम्रो यस महासंघले यही मूल मर्मलाई आत्मसात गर्दै अगाडि बढ्ने प्रण हामी गर्दछौं । यसका लागि महासंघको नेतृत्व सदैव कृयाशील रहने बिश्वास दिलाउन चाहन्छु । समयको दौरानमा आउने आरोह अवरोहहरूलाई हामीले सामुहिकरूपमा सम्वोधन गर्दै आफ्नो पेशागत सुरक्षा र अधिकारका लागि सक्दो पहल जारी राख्दै आएका छौं  र आगमी दिनमा पनि त्यसलाई निरन्तरता दिने प्रण गर्दछौं ।
+ 
+बिश्वब्यापी रुपमा फैलिएको आर्थिक मन्दिको प्रभावले सुनचाँदी ब्यवसाय र यस ब्यवसायमा आवद्ध सम्पूर्ण ब्यवसायीलाई पनि प्रभावित बनाएकै छ । सुनको भाउमा आएको बृद्धि, आपूर्तिका लागि दैनिक २० किलोमा मात्र सिमित कोटा प्रणालीमा निर्भररही पेशा ब्यवसाय सञ्चालन गर्नुपर्ने बाध्यात्मक अवस्था हामी माझि छ । तसर्थ आफूलाई एक कदम परिस्कृत गर्दै अगाडि बढ्नुपर्ने टड्कारो खाँचो अहिले हामीमाझ देखिएको छ । यसकालागि हामी निरन्तर कृयाशील रहेने छौं ।
 
 
-===== https://www.fenegosida.org/rate-history.php =====
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Federation of Nepal Gold & Silver Dealers's Association</title>
-    <script type="module" crossorigin src="/assets/index-BKOvvj1h.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CEQTeOkz.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
-</html>
+Read Full Message
+नेपाल सुनचाँदी व्यवसायी महासंघ
+तेश्रो बार्षिक साधारण सभा
+कागेश्वरी मनोहरा सुनचाँदी व्यवसायी संघ
+बधाई तथा सम्मान कार्यक्रम
+नेपाल सुनचाँदी व्यवसायी संघ चितवन
+२२ औ बार्षिक साधारण सभा - २०८१
+काठमाडौं सुनचाँदी व्यवसायी संघ
+नेपाल सुनचाँदी व्यवसायी महासंघ
+नेपाल सुनचाँदी व्यवसायी महासंघ
+कार्य समिति बैठक
+नेपाल सुनचाँदी व्यवसायी महासंघ
+Gold Rate
+
+Last 7 Days
+
+Per 1 Tola (Solid)Per 10 Grams (Dashed)
+Saturday
+Sunday
+Monday
+Tuesday
+Wednesday
+Thursday
+Friday
+रू0k
+रू70k
+रू140k
+रू210k
+रू280k
+Silver Rate
+
+Last 7 Days
+
+Per 1 Tola (Solid)Per 10 Grams (Dashed)
+Saturday
+Sunday
+Monday
+Tuesday
+Wednesday
+Thursday
+Friday
+रू0k
+रू1k
+रू2k
+रू3k
+रू4k
+Latest Events
+Our Latest Events
+View More
+Latest Press Releases
+Our Latest Press Releases
+Press Release
+असार २९, २०८३
+होटल याक एण्ड येतीमा "एएमएल सुरक्षा" कार्यक्रम सम्पन्न, तीन महासंघको सहभागिता
+
+मिति २०८३ साल असार २९ गते नेपाल राष्ट्र बैंकको एन्टी मनी लाउन्डरिङ विभागको आयोजनामा होटल याक एण्ड येती, काठमाडौंमा "एएमएल सुरक्षा" (AML Safety) सम्बन्धी विशेष कार्यक्रम सम्पन्न भएको छ। उक्त कार्यक्रममा तीनवटै सम्बद्ध महासंघहरूको सक्रिय सहभागिता रहेको थियो।
+
+Read More
+Press Release
+जेठ ६, २०८३
+एन्टी मनी लाउन्डरिङ सम्बन्धी बैठक सिंहदरबारमा सम्पन्न, एपीजी डाइरेक्टर डेभिडको सहभागिता
+
+मिति २०८३ साल जेठ ०६ गते प्रधानमन्त्री कार्यालय, सिंहदरबारमा एन्टी मनी लाउन्डरिङ (Anti Money Laundering) विषयमा एक महत्वपूर्ण बैठक सम्पन्न भएको छ। उक्त बैठकमा एशिया प्यासिफिक ग्रुप (APG) का डाइरेक्टर डेभिडको प्रमुख उपस्थिति रहेको थियो, साथै विभिन्न वाणिज्य बैंकहरूका उच्चस्तरीय प्रतिनिधिहरूले समेत सहभागिता जनाएका थिए।
+
+Read More
+View More
+Get Our Mobile App
+
+Scan a QR code below to download the FENEGOSIDA app and get live gold & silver rates, news, and updates right on your phone.
+
+Download on the App Store
+Get it on Google Play
+Federation of Nepal Gold And Silver Dealers' Association
+Quick Links
+Press Release
+Executive
+Rate History
+Recent News
+Give Your Feedback
+District Registration
+Downloads
+SMS Request Form
+SMS Mobile Number Change Form
+Membership Form
+Address
+info@fenegosida.org
+Naxal, Kathmandu, Nepal
+Our Products
+|
+Privacy Policy
+|
+Terms & Conditions
+|
+Made By Binet Technologies
+रू1k
+
+===== JSON requests seen =====
+https://api.fenegosida.org/api/website/v1/Website/GetNotice
+https://api.fenegosida.org/api/website/v1/Website/getFooter
+https://api.fenegosida.org/api/website/v1/Website/getNavbar
+https://api.fenegosida.org/api/website/v1/Dashboard/WeeklyChartRate?weekmonthyear=7
+https://api.fenegosida.org/api/website/v1/Website/GetLatest
+https://api.fenegosida.org/api/website/v1/Website/getNavbar
+https://api.fenegosida.org/api/website/v1/Dashboard/today
+https://api.fenegosida.org/api/website/v1/Website/getContact
+https://api.fenegosida.org/api/website/v1/Website/GetIntroductionByTypeWeb?type=Advertisement
+https://api.fenegosida.org/api/website/v1/Website/GetNewsPressRelease
+https://api.fenegosida.org/api/website/v1/Website/GetHeroSection
+https://api.fenegosida.org/api/website/v1/Website/GetCarouselGallery
+https://api.fenegosida.org/api/website/v1/Website/getPresidentMessage
+https://api.fenegosida.org/api/website/v1/Website/GetNewsEvent
+https://api.fenegosida.org/api/website/v1/Dashboard/today
