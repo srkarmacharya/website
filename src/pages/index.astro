@@ -37,7 +37,7 @@ const updated = cats.map((c) => c.updated).filter(Boolean).sort().pop();
 
   <section class="block">
     <h2 class="label">Nepal, today</h2>
-    <p class="small muted note">Each line starts at 100 a year ago, so prices on very different scales can share a chart. Hover for actual prices.</p>
+    <p class="small muted note">Each line starts at 100 a year ago, so prices on very different scales can share a chart. Hover over a line for its actual price.</p>
     <div class="grid">
       {cats.map((c) => <PriceChart cat={c} compact range="1Y" />)}
     </div>

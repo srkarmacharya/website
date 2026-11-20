@@ -95,13 +95,14 @@ function setup(fig) {
       const t = el('text', { x: x(i), y: H - 5, 'font-size': 11, fill: muted, 'text-anchor': k === 0 ? 'start' : k === arr.length - 1 ? 'end' : 'middle' }, svg);
       t.textContent = fmtShort(dates[i]);
     });
+    const baseW = compact ? 1.6 : 1.9;
     vis.forEach((v) => {
       let d = '', pen = false;
       v.idx.forEach((val, i) => {
         if (val === null) { pen = false; return; }
         d += `${pen ? 'L' : 'M'}${x(i).toFixed(1)},${y(val).toFixed(1)}`; pen = true;
       });
-      el('path', { d, fill: 'none', stroke: cs[v.si % cs.length], 'stroke-width': compact ? 1.6 : 1.9, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, svg);
+      v.path = el('path', { d, fill: 'none', stroke: cs[v.si % cs.length], 'stroke-width': baseW, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, svg);
     });
 
     // hover
@@ -110,27 +111,46 @@ function setup(fig) {
     tip.className = 'tip';
     tip.style.cssText = `position:absolute;pointer-events:none;opacity:0;background:${bg};border:1px solid ${line};color:${fg};font-size:12px;line-height:1.5;padding:8px 10px;border-radius:6px;white-space:nowrap;z-index:2;box-shadow:0 4px 18px rgba(0,0,0,.18)`;
     plot.appendChild(tip);
-    function move(clientX) {
+    const dot = el('circle', { r: 3.5, opacity: 0 }, svg);
+    function reset() {
+      tip.style.opacity = 0; guide.setAttribute('opacity', 0); dot.setAttribute('opacity', 0);
+      vis.forEach((v) => { v.path.setAttribute('opacity', 1); v.path.setAttribute('stroke-width', baseW); });
+    }
+    function move(clientX, clientY) {
       const r = svg.getBoundingClientRect();
-      const px = clientX - r.left;
+      const px = clientX - r.left, py = clientY - r.top;
       const i = Math.max(0, Math.min(n - 1, Math.round(((px - padL) / (W - padL - padR)) * (n - 1))));
-      guide.setAttribute('x1', x(i)); guide.setAttribute('x2', x(i)); guide.setAttribute('opacity', 0.5);
-      const rows = vis.map((v) => {
-        const a = v.vals[i];
-        if (a === null) return '';
-        const ch = v.idx[i] - 100;
-        return `<div><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${cs[v.si % cs.length]};margin-right:6px"></span>${v.s.name}: <b>${fmtNum(a)}</b> <span style="color:${muted}">(${ch >= 0 ? '+' : ''}${ch.toFixed(1)}%)</span></div>`;
-      }).join('');
-      tip.innerHTML = `<div style="color:${muted};margin-bottom:2px">${fmtDate(dates[i])}</div>${rows}`;
+      // the line closest to the pointer at this date
+      let best = null, bestD = Infinity;
+      vis.forEach((v) => {
+        let j = i; while (j > 0 && v.idx[j] === null) j--;
+        if (v.idx[j] === null) return;
+        const dd = Math.abs(y(v.idx[j]) - py);
+        if (dd < bestD) { bestD = dd; best = { v, j }; }
+      });
+      if (!best) { reset(); return; }
+      const { v, j } = best;
+      vis.forEach((o) => {
+        o.path.setAttribute('opacity', o === v ? 1 : 0.18);
+        o.path.setAttribute('stroke-width', o === v ? baseW + 1 : baseW);
+      });
+      const col = cs[v.si % cs.length];
+      guide.setAttribute('x1', x(j)); guide.setAttribute('x2', x(j)); guide.setAttribute('opacity', 0.4);
+      dot.setAttribute('cx', x(j)); dot.setAttribute('cy', y(v.idx[j])); dot.setAttribute('fill', col); dot.setAttribute('opacity', 1);
+      const ch = v.idx[j] - 100;
+      const unit = v.s.unit.replace(/^NPR /, 'NPR ');
+      tip.innerHTML = `<div style="font-weight:600"><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${col};margin-right:6px"></span>${v.s.name}</div>`
+        + `<div><b>${fmtNum(v.vals[j])}</b> <span style="color:${muted}">${unit}</span></div>`
+        + `<div style="color:${muted}">${fmtDate(dates[j])} · ${ch >= 0 ? '+' : ''}${ch.toFixed(1)}% since ${fmtShort(dates[0])}</div>`;
       tip.style.opacity = 1;
-      const tw = tip.offsetWidth;
-      tip.style.left = Math.min(Math.max(0, x(i) + 12), W - tw) + 'px';
-      tip.style.top = '4px';
-      if (x(i) + 12 + tw > W) tip.style.left = Math.max(0, x(i) - tw - 12) + 'px';
+      const tw = tip.offsetWidth, th = tip.offsetHeight;
+      let left = x(j) + 14; if (left + tw > W) left = x(j) - tw - 14;
+      let top = y(v.idx[j]) - th - 10; if (top < 0) top = y(v.idx[j]) + 12;
+      tip.style.left = Math.max(0, left) + 'px'; tip.style.top = top + 'px';
     }
     svg.style.touchAction = 'pan-y';
-    svg.addEventListener('pointermove', (e) => move(e.clientX));
-    svg.addEventListener('pointerleave', () => { tip.style.opacity = 0; guide.setAttribute('opacity', 0); });
+    svg.addEventListener('pointermove', (e) => move(e.clientX, e.clientY));
+    svg.addEventListener('pointerleave', reset);
   }
 
   fig.querySelectorAll('.ranges button').forEach((b) => {
