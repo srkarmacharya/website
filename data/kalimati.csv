@@ -1,1 +1,116 @@
 date,commodity,unit,min,max,avg
+2026-11-20,Amla,KG,70,80,75
+2026-11-20,Apple(Fuji),KG,300,350,325
+2026-11-20,Apple(Jumla),Kg,250,350,300
+2026-11-20,Apple(Mustang),Kg,200,250,225
+2026-11-20,Arum,KG,50,70,60
+2026-11-20,Avocado,KG,200,300,250
+2026-11-20,Bakula,KG,90,100,95
+2026-11-20,Bamboo Shoot,KG,140,160,150
+2026-11-20,Banana(Malbhog),Doz,100,150,125
+2026-11-20,Banana(Nepali),Per Dozen,100,150,125
+2026-11-20,Barela,KG,30,40,35
+2026-11-20,Bitter Gourd,KG,60,80,70
+2026-11-20,Bottle Gourd,KG,60,70,65
+2026-11-20,Brd Leaf Mustard,KG,50,80,65
+2026-11-20,Brinjal Long,KG,20,30,25
+2026-11-20,Brinjal Round,KG,30,50,40
+2026-11-20,Broccoli,KG,90,120,105
+2026-11-20,Cabbage(Local),KG,20,30,25
+2026-11-20,Capsicum,KG,80,100,90
+2026-11-20,Carrot(Local),KG,80,90,85
+2026-11-20,Carrot(Terai),KG,50,60,55
+2026-11-20,Cauli Local,KG,25,35,30
+2026-11-20,Cauli Terai,KG,20,30,25
+2026-11-20,Celery,KG,400,500,450
+2026-11-20,Chilli Dry,KG,500,550,525
+2026-11-20,Chilli Green(Akbare),KG,200,250,225
+2026-11-20,Chilli Green(Bullet),KG,90,100,95
+2026-11-20,Chilli Green(Long),KG,60,70,65
+2026-11-20,Chilli Green(Machhe),KG,90,100,95
+2026-11-20,Christophine,KG,15,20,17.5
+2026-11-20,Clive Dry,KG,180,200,190
+2026-11-20,Clive Green,KG,150,200,175
+2026-11-20,Coconut(Green),Kg,150,200,175
+2026-11-20,Coconut(Tender),Kg,60,80,70
+2026-11-20,Coriander Green,KG,80,120,100
+2026-11-20,Cow pea(Long),KG,90,100,95
+2026-11-20,Cowpea(Short),KG,40,50,45
+2026-11-20,Cress Leaf,KG,100,150,125
+2026-11-20,Cucumber(Hybrid),KG,30,40,35
+2026-11-20,Cucumber(Local),KG,60,80,70
+2026-11-20,Cucumber(LocalCross),Kg,60,70,65
+2026-11-20,Dragon Fruit(Nepali),Kg,400,500,450
+2026-11-20,Drumstick,KG,200,250,225
+2026-11-20,Fennel Leaf,KG,100,150,125
+2026-11-20,Fenugreek Leaf,KG,100,150,125
+2026-11-20,Fish Dry,KG,800,1000,900
+2026-11-20,Fish Fresh(Bachuwa),KG,300,330,315
+2026-11-20,Fish Fresh(Chhadi),KG,320,350,335
+2026-11-20,Fish Fresh(Rahu),KG,340,370,355
+2026-11-20,French Bean(Hybrid),KG,60,80,70
+2026-11-20,French Bean(Local),KG,80,90,85
+2026-11-20,French Bean(Rajma),KG,90,120,105
+2026-11-20,Garlic Dry Chinese,KG,230,260,245
+2026-11-20,Garlic Dry Nepali,KG,250,300,275
+2026-11-20,Garlic Green,KG,150,200,175
+2026-11-20,Ginger,KG,80,90,85
+2026-11-20,Green Peas,KG,100,120,110
+2026-11-20,Guava,KG,200,250,225
+2026-11-20,Gundruk,KG,300,350,325
+2026-11-20,King Oyster,Kg,280,300,290
+2026-11-20,Kiwi,KG,200,300,250
+2026-11-20,Lemon,KG,50,60,55
+2026-11-20,Lentinula Edodes,Kg,800,1000,900
+2026-11-20,Lettuce,KG,100,150,125
+2026-11-20,Lime,KG,200,300,250
+2026-11-20,Mandarin,KG,150,200,175
+2026-11-20,Mint,KG,600,700,650
+2026-11-20,Mombin,KG,70,80,75
+2026-11-20,Mushroom(Button),KG,400,450,425
+2026-11-20,Mushroom(Kanya),KG,240,280,260
+2026-11-20,Mustard Leaf,KG,50,80,65
+2026-11-20,Okra,KG,100,120,110
+2026-11-20,Onion Dry (Indian),KG,90,95,92.5
+2026-11-20,Onion Green,KG,150,200,175
+2026-11-20,Orange(Indian),KG,90,100,95
+2026-11-20,Orange(Nepali),KG,90,100,95
+2026-11-20,Papaya(Indian),KG,90,100,95
+2026-11-20,Papaya(Nepali),KG,50,60,55
+2026-11-20,Parsley,KG,2400,2800,2600
+2026-11-20,Pear(Chinese),KG,250,300,275
+2026-11-20,Pineapple,1 Pc,150,200,175
+2026-11-20,Pointed Gourd(Local),KG,70,80,75
+2026-11-20,Pointed Gourd(Terai),KG,80,90,85
+2026-11-20,Pomegranate,KG,350,400,375
+2026-11-20,Potato Red(Indian),KG,30,35,32.5
+2026-11-20,Potato Red(Long),KG,45,50,47.5
+2026-11-20,Potato Red(Round),KG,45,50,47.5
+2026-11-20,Potato White,KG,28,35,31.5
+2026-11-20,Pumpkin,KG,60,70,65
+2026-11-20,Raddish Red,KG,20,30,25
+2026-11-20,Raddish White(Hybrid),KG,20,30,25
+2026-11-20,Raddish White(Local),KG,20,30,25
+2026-11-20,Red Cabbbage,KG,150,180,165
+2026-11-20,Sarifa,KG,200,250,225
+2026-11-20,Smooth Gourd,KG,60,70,65
+2026-11-20,Snake Gourd,KG,30,40,35
+2026-11-20,Spinach Leaf,KG,100,120,110
+2026-11-20,Sponge Gourd,KG,60,70,65
+2026-11-20,Squash(Long),KG,20,30,25
+2026-11-20,Squash(Round),KG,20,30,25
+2026-11-20,Strawberry,KG,400,500,450
+2026-11-20,Sugarbeet,KG,80,90,85
+2026-11-20,Sweet Orange,KG,150,200,175
+2026-11-20,Sweet Potato,KG,40,60,50
+2026-11-20,Sword Bean,KG,60,80,70
+2026-11-20,Tamarind,KG,160,180,170
+2026-11-20,Tofu,KG,140,160,150
+2026-11-20,Tomato Big(Nepali),KG,60,70,65
+2026-11-20,Tomato Small(Local),KG,10,20,15
+2026-11-20,Tomato Small(Terai),KG,35,50,42.5
+2026-11-20,Tomato Small(Tunnel),KG,35,55,42.2
+2026-11-20,Tree Tomato,Kg,100,150,125
+2026-11-20,Turnip A,KG,100,150,125
+2026-11-20,Water Melon(Green),KG,70,80,75
+2026-11-20,Yam,KG,80,100,90
