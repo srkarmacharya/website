@@ -247,6 +247,72 @@ def update_kalimati() -> str:
     return f"kalimati: {len(new)} commodities{note}"
 
 
+# ---------------------------------------------------------------- NEPSE
+def parse_sharesansar_market(html: str) -> tuple[str | None, list[dict]]:
+    """sharesansar.com/market has tables headed 'Index Open High Low Close Point % Change Turnover'
+    under 'Indices As of YYYY-MM-DD' and 'Sub Indices As of YYYY-MM-DD'."""
+    soup = BeautifulSoup(html, "html.parser")
+    m = re.search(r"As of\s*(\d{4}-\d{2}-\d{2})", soup.get_text(" ", strip=True))
+    date = m.group(1) if m else None
+    rows = []
+    for table in soup.find_all("table"):
+        head = [c.get_text(" ", strip=True).lower() for c in table.find_all("th")]
+        if not head or "close" not in head:
+            continue
+        col = {name: head.index(name) for name in head}
+        for tr in table.find_all("tr"):
+            cells = [c.get_text(" ", strip=True) for c in tr.find_all("td")]
+            if len(cells) < len(head) or not re.search(r"index", cells[0], re.I):
+                continue
+            def g(key):
+                i = next((i for n, i in col.items() if n.startswith(key)), None)
+                return to_number(cells[i]) if i is not None else None
+            close = g("close")
+            if close is None:
+                continue
+            pct_i = next((i for n, i in col.items() if "%" in n), None)
+            pct = cells[pct_i].replace(",", "") if pct_i is not None else ""
+            rows.append({"index": cells[0], "open": g("open"), "high": g("high"), "low": g("low"), "close": close,
+                         "change_pct": pct, "turnover": g("turnover")})
+    return date, rows
+
+
+def update_nepse() -> str:
+    errors = []
+    date, rows = None, []
+    try:
+        r = get("https://www.sharesansar.com/market")
+        date, rows = parse_sharesansar_market(r.text)
+        if not rows:
+            errors.append("sharesansar: no index rows parsed")
+            d = DATA / "_debug"; d.mkdir(exist_ok=True)
+            (d / "nepse.txt").write_text(r.text[:30000], encoding="utf-8")
+    except Exception as e:
+        errors.append(f"sharesansar: {type(e).__name__}: {e}")
+    if not rows:  # fallback: NEPSE's own API through the nepse-data-api library
+        try:
+            from nepse_data_api import Nepse  # type: ignore
+            data = Nepse().get_nepse_index()
+            items = data if isinstance(data, list) else data.get("data", []) if isinstance(data, dict) else []
+            for it in items:
+                if "index" in it and it.get("close") is not None:
+                    rows.append({"index": it["index"], "open": it.get("open"), "high": it.get("high"), "low": it.get("low"),
+                                 "close": it["close"], "change_pct": it.get("perChange", ""), "turnover": it.get("turnover")})
+            date = date or TODAY.isoformat()
+        except Exception as e:
+            errors.append(f"nepse-data-api: {type(e).__name__}: {e}")
+    if not rows:
+        raise RuntimeError("nepse: " + "; ".join(errors))
+    date = date or TODAY.isoformat()
+    fields, existing = read_rows("nepse.csv")
+    fmt = lambda v: "" if v is None else f"{v:g}" if isinstance(v, float) else str(v)
+    for row in rows:
+        existing.append({"date": date, **{k: fmt(v) for k, v in row.items()}})
+    write_rows("nepse.csv", fields, existing, ("date", "index"))
+    nepse = next((r for r in rows if r["index"].lower().startswith("nepse")), rows[0])
+    return f"nepse: {len(rows)} indices for {date} (NEPSE {nepse['close']})"
+
+
 # ---------------------------------------------------------------- Headlines
 def update_headlines() -> str:
     url = "https://news.google.com/rss/search"
@@ -281,13 +347,14 @@ def update_headlines() -> str:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--forex-from", type=dt.date.fromisoformat, help="backfill NRB rates from this date (YYYY-MM-DD)")
-    ap.add_argument("--only", choices=["forex", "bullion", "kalimati", "headlines"], action="append")
+    ap.add_argument("--only", choices=["forex", "bullion", "kalimati", "nepse", "headlines"], action="append")
     args = ap.parse_args()
 
     jobs = {
         "forex": lambda: update_forex(args.forex_from),
         "bullion": update_bullion,
         "kalimati": update_kalimati,
+        "nepse": update_nepse,
         "headlines": update_headlines,
     }
     failed = []

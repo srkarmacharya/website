@@ -145,12 +145,35 @@ function kalimati(defs: typeof VEGETABLES, id: string, title: string): Category 
   };
 }
 
+// ---------- NEPSE (stock market) ----------
+const NEPSE = [
+  { key: 'nepse', name: 'NEPSE Index', match: /^nepse index$/ },
+  { key: 'banking', name: 'Banking', match: /^banking/ },
+  { key: 'hydro', name: 'Hydropower', match: /^hydro ?power/ },
+  { key: 'microfinance', name: 'Microfinance', match: /^microfinance/ },
+  { key: 'devbank', name: 'Development banks', match: /^development bank/ },
+  { key: 'lifeins', name: 'Life insurance', match: /^life insurance/ },
+];
+
+function nepse(): Category {
+  const rows = readCsv('nepse.csv').flatMap((r) => {
+    const d = NEPSE.find((x) => x.match.test(norm(r.index)));
+    return d ? [{ date: r.date, key: d.key, value: Number(r.close) }] : [];
+  });
+  const b = build(rows, NEPSE.map(({ key, name }) => ({ key, name, unit: 'index points' })));
+  return {
+    id: 'nepse', title: 'Stock market (NEPSE)', subtitle: 'Closing index values, trading days only',
+    source: 'Nepal Stock Exchange via ShareSansar', sourceUrl: 'https://www.sharesansar.com/market', ...b,
+  };
+}
+
 export function loadCategories(): Category[] {
   return [
     currencies(),
     bullion(),
     kalimati(VEGETABLES, 'vegetables', 'Vegetables'),
     kalimati(FRUITS, 'fruits', 'Fruits'),
+    nepse(),
   ];
 }
 

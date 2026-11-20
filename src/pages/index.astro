@@ -71,6 +71,7 @@ const updated = cats.map((c) => c.updated).filter(Boolean).sort().pop();
   .more a { text-decoration: none; color: var(--muted); }
   .note { margin: 0 0 18px; }
   .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-bottom: 12px; }
+  .grid > :global(figure:last-child:nth-child(odd)) { grid-column: 1 / -1; }
   .grid a { text-decoration: none; }
   .op-title { font-family: var(--serif); font-size: 20px; }
   @media (max-width: 640px) {

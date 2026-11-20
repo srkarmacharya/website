@@ -25,7 +25,7 @@ function latest(cat: (typeof cats)[number]) {
 <Base title="Dashboard" wide description="A daily record of prices in Nepal: exchange rates, gold and silver, and Kalimati vegetable and fruit prices.">
   <div class="intro">
     <h1 class="page-title">Nepal, today</h1>
-    <p class="lede">A daily record of prices that shape household budgets in Nepal. It updates automatically every morning from official and market sources.</p>
+    <p class="lede">A daily record of prices that shape household budgets in Nepal, plus the stock market. It updates automatically every day from official and market sources.</p>
     <p class="small muted how">
       <strong>How to read the charts:</strong> each line is <em>indexed</em> to 100 on the first day of the period you choose. A line at 110 means that price is 10% higher than at the start. This lets items with very different prices, like gold and silver, share one chart. Hover over or tap a line to see its actual price. Click a name in the legend to hide or show its line.
     </p>
@@ -41,12 +41,12 @@ function latest(cat: (typeof cats)[number]) {
       {cats.map((c) => (
         <table>
           <caption>{c.title}</caption>
-          <thead><tr><th scope="col">Item</th><th scope="col" class="num">Price (NPR)</th><th scope="col" class="num">30-day change</th></tr></thead>
+          <thead><tr><th scope="col">Item</th><th scope="col" class="num">Latest</th><th scope="col" class="num">30-day change</th></tr></thead>
           <tbody>
             {latest(c).length === 0 && <tr><td colspan="3" class="muted">Awaiting first update</td></tr>}
             {latest(c).map((r) => (
               <tr>
-                <th scope="row">{r.name}<span class="unit">{r.unit.replace('NPR ', '')}</span></th>
+                <th scope="row">{r.name}<span class="unit">{r.unit.replace('NPR ', 'NPR ')}</span></th>
                 <td class="num">{r.value === null ? '–' : fmt(r.value)}</td>
                 <td class="num">{r.change === null ? '–' : `${r.change >= 0 ? '+' : ''}${r.change.toFixed(1)}%`}</td>
               </tr>
@@ -79,6 +79,7 @@ function latest(cat: (typeof cats)[number]) {
     <p><strong>Exchange rates:</strong> <a href="https://www.nrb.org.np/forex/">Nepal Rastra Bank</a> official buying rates, converted to NPR per single unit of each currency. The Indian rupee isn’t charted because it is pegged at 1.6 NPR.</p>
     <p><strong>Gold and silver:</strong> daily rates set by the <a href="https://www.fenegosida.org/">Federation of Nepal Gold and Silver Dealers’ Association (FENEGOSIDA)</a>, per tola (11.66 g).</p>
     <p><strong>Vegetables and fruits:</strong> daily average wholesale prices published by <a href="https://kalimatimarket.gov.np/">Kalimati Fruits and Vegetable Market Development Board</a>, Kathmandu. Units are per kg unless noted.</p>
+    <p><strong>Stock market:</strong> closing values of the NEPSE Index and selected sector sub-indices from the <a href="https://www.nepalstock.com.np/">Nepal Stock Exchange</a>, read from <a href="https://www.sharesansar.com/market">ShareSansar</a>. Values are index points; markets are closed on Fridays, Saturdays and public holidays.</p>
     <p>Data are collected automatically and may contain gaps or errors from the source. On days a source doesn’t publish, such as holidays, its lines simply pause. The full history is available as CSV files in this site’s <a href="https://github.com/srkarmacharya/website/tree/main/data">GitHub repository</a>.</p>
   </section>
 </Base>
@@ -89,6 +90,7 @@ function latest(cat: (typeof cats)[number]) {
   .intro { max-width: 760px; }
   .how { margin: -16px 0 32px; line-height: 1.6; }
   .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .grid > :global(figure:last-child:nth-child(odd)) { grid-column: 1 / -1; }
   .tables, .news, .sources { margin-top: 56px; }
   .tgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 40px; }
   table { width: 100%; border-collapse: collapse; font-size: 14px; }
