@@ -120,7 +120,7 @@ const VEGETABLES = [
 ];
 const FRUITS = [
   { key: 'apple', name: 'Apple (Fuji)', match: /^apple fuji/ },
-  { key: 'banana', name: 'Banana', match: /^banana( local)?$/ },
+  { key: 'banana', name: 'Banana (Nepali)', match: /^banana nepali/ },
   { key: 'orange', name: 'Orange', match: /^orange( nepali)?$/ },
   { key: 'pomegranate', name: 'Pomegranate', match: /^pomegranate/ },
   { key: 'papaya', name: 'Papaya', match: /^papaya( nepali)?$/ },

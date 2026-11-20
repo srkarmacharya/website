@@ -112,22 +112,53 @@ BULLION_PATTERNS = {
 }
 
 
-def update_bullion() -> str:
-    html = get("https://www.fenegosida.org/").text
-    text = BeautifulSoup(html, "html.parser").get_text(" ", strip=True)
+BULLION_URLS = ["https://www.fenegosida.org/", "https://fenegosida.org/", "http://www.fenegosida.org/"]
+
+
+def _bullion_debug(note: str, text: str = "") -> None:
+    """Save a short diagnostic so a failed parse can be fixed without guessing."""
+    d = DATA / "_debug"
+    d.mkdir(exist_ok=True)
+    snippets = [m.start() for m in re.finditer(r"tola|gold|silver|सुन|चाँदी", text, re.I)][:12]
+    parts = [text[max(0, i - 150): i + 150] for i in snippets] or [text[:1500]]
+    (d / "bullion.txt").write_text(f"{dt.datetime.now(NPT).isoformat()}\n{note}\n\n" + "\n---\n".join(parts), encoding="utf-8")
+
+
+def parse_bullion(text: str) -> dict[str, float]:
     text = re.sub(r"\s+", " ", text.translate(DEV_DIGITS))
     found: dict[str, float] = {}
     for item, pat in BULLION_PATTERNS.items():
-        # e.g. "FINE GOLD (9999) per 1 tola रु 1,62,500"
-        m = re.search(pat + r".{0,40}?per\s*1\s*tola\D{0,20}?([\d,]{3,})", text, re.I)
-        if m:
-            v = to_number(m.group(1))
-            if v:
+        # e.g. "FINE GOLD (9999) per 1 tola रु 1,62,500" -- allow either order of label/number
+        for rx in (pat + r".{0,60}?(?:per\s*)?1\s*tola\D{0,25}?(\d[\d,]{3,})",
+                   pat + r"\D{0,80}?(\d{1,3}(?:,\d{2,3})+)"):
+            m = re.search(rx, text, re.I)
+            if m and (v := to_number(m.group(1))):
                 found[item] = v
-    if not found:
-        raise RuntimeError("bullion: no prices found on fenegosida.org (page layout may have changed)")
-    # sanity: gold should be far above silver
+                break
+    return found
+
+
+def update_bullion() -> str:
+    errors = []
+    text = ""
+    for url in BULLION_URLS:
+        try:
+            r = requests.get(url, headers=UA, timeout=40)
+            text = BeautifulSoup(r.text, "html.parser").get_text(" ", strip=True)
+            if r.status_code != 200:
+                errors.append(f"{url}: HTTP {r.status_code}")
+                continue
+            found = parse_bullion(text)
+            if found:
+                break
+            errors.append(f"{url}: page loaded ({len(text)} chars) but no prices matched")
+        except requests.RequestException as e:
+            errors.append(f"{url}: {type(e).__name__}: {e}")
+    else:
+        _bullion_debug("; ".join(errors), text)
+        raise RuntimeError("bullion: " + "; ".join(errors))
     if "fine_gold" in found and found["fine_gold"] < 10000:
+        _bullion_debug(f"implausible gold price {found}", text)
         raise RuntimeError(f"bullion: implausible gold price {found['fine_gold']}")
     fields, rows = read_rows("bullion.csv")
     for item, v in found.items():
@@ -171,7 +202,7 @@ def update_kalimati() -> str:
 # ---------------------------------------------------------------- Headlines
 def update_headlines() -> str:
     url = "https://news.google.com/rss/search"
-    params = {"q": "Nepal economy OR Nepal Rastra Bank OR remittance Nepal when:3d", "hl": "en-NP", "gl": "NP", "ceid": "NP:en"}
+    params = {"q": 'Nepal (economy OR "Rastra Bank" OR remittance OR inflation OR budget OR "foreign exchange" OR trade OR agriculture) when:4d', "hl": "en-NP", "gl": "NP", "ceid": "NP:en"}
     root = ET.fromstring(get(url, params=params).content)
     items = []
     seen = set()
