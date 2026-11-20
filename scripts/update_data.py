@@ -15,6 +15,7 @@ import argparse
 import csv
 import datetime as dt
 import json
+import os
 import re
 import sys
 import time
@@ -137,38 +138,34 @@ def parse_bullion(text: str) -> dict[str, float]:
     return found
 
 
-def update_bullion() -> str:
-    errors: list[str] = []
-    pages: list[tuple[str, str]] = []
-    queue = list(BULLION_URLS)
-    seen: set[str] = set()
-    found: dict[str, float] = {}
-    while queue and not found and len(seen) < 8:
-        url = queue.pop(0)
-        if url in seen:
-            continue
-        seen.add(url)
+def _render_with_browser(url: str) -> tuple[str, list[str]]:
+    """FENEGOSIDA's site is a JavaScript app: load it in headless Chromium and return
+    the visible text, plus the URLs of any JSON responses (to help find its API later)."""
+    from playwright.sync_api import sync_playwright  # installed in the GitHub workflow
+
+    json_urls: list[str] = []
+    with sync_playwright() as p:
+        browser = p.chromium.launch(executable_path=os.environ.get("CHROMIUM_PATH") or None)
+        page = browser.new_page(user_agent=UA["User-Agent"])
+        page.on("response", lambda r: json_urls.append(r.url) if "json" in (r.headers.get("content-type") or "") else None)
+        page.goto(url, wait_until="networkidle", timeout=60000)
         try:
-            r = requests.get(url, headers=UA, timeout=40)
-        except requests.RequestException as e:
-            errors.append(f"{url}: {type(e).__name__}")
-            continue
-        pages.append((url, r.text))
-        soup = BeautifulSoup(r.text, "html.parser")
-        found = parse_bullion(soup.get_text(" ", strip=True)) if r.status_code == 200 else {}
-        if found:
-            break
-        errors.append(f"{url}: HTTP {r.status_code}, no prices")
-        # prices are often in an embedded frame or a separately loaded page: follow those
-        for tag in soup.find_all(["iframe", "frame"]):
-            if tag.get("src"):
-                queue.insert(0, requests.compat.urljoin(url, tag["src"]))
-        for a_ in soup.find_all("a", href=True):
-            if re.search(r"rate|price|gold", a_["href"], re.I) and "fenegosida" in requests.compat.urljoin(url, a_["href"]):
-                queue.append(requests.compat.urljoin(url, a_["href"]))
+            page.wait_for_function("() => /tola/i.test(document.body.innerText)", timeout=20000)
+        except Exception:
+            pass
+        text = page.inner_text("body")
+        browser.close()
+    return text, json_urls
+
+
+def update_bullion() -> str:
+    url = BULLION_URLS[0]
+    text, json_urls = _render_with_browser(url)
+    found = parse_bullion(text)
+    pages = [(url + " (rendered text)", text), ("JSON requests seen", "\n".join(json_urls))]
     if not found:
-        _bullion_debug("; ".join(errors), pages)
-        raise RuntimeError("bullion: " + "; ".join(errors))
+        _bullion_debug("rendered page loaded but no prices matched", pages)
+        raise RuntimeError(f"bullion: no prices matched in rendered page ({len(text)} chars)")
     if "fine_gold" in found and found["fine_gold"] < 10000:
         _bullion_debug(f"implausible gold price {found}", pages)
         raise RuntimeError(f"bullion: implausible gold price {found['fine_gold']}")
