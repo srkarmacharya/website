@@ -1,0 +1,65 @@
+---
+import Base from '../layouts/Base.astro';
+import PlanRow from '../components/PlanRow.astro';
+import { loadPlan } from '../lib/studyplan';
+
+const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const plan = loadPlan();
+const span = (from: number | null, to: number | null) =>
+  from === null ? '' : from === to ? `Week ${from}` : `Weeks ${from}–${to}`;
+---
+<Base title="Study plan" description="A free self-study plan for the maths used in economics: calculus, proofs, linear algebra, probability, statistics and real analysis.">
+  <div class="intro">
+    <h1 class="page-title">Maths for economics, from the ground up</h1>
+    <p class="lede">A self-study plan for building the maths that economics relies on, using only free courses and books. I’m following it myself, and anyone is welcome to use it.</p>
+    <div class="prose small-prose">
+      <p>It assumes about <strong>30–45 minutes a day</strong> and takes roughly {plan.totalWeeks} weeks, including a few spare ones. Proof-writing runs alongside calculus from the start, because real analysis, like much of economic theory, is about writing proofs rather than calculating.</p>
+      <p>Work the exercises by hand rather than only watching. If a topic is familiar, take the test or problem set first and study only what you miss.</p>
+    </div>
+  </div>
+
+  <section class="overview">
+    <h2 class="label">Overview</h2>
+    <table>
+      <thead><tr><th scope="col">Topic</th><th scope="col">When</th><th scope="col" class="num">Blocks</th></tr></thead>
+      <tbody>
+        {plan.phases.map((p) => (
+          <tr>
+            <th scope="row"><a href={`#${slug(p.name)}`}>{p.name}</a></th>
+            <td class="muted">{span(p.from, p.to)}</td>
+            <td class="num muted">{p.items.length}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </section>
+
+  <section class="full">
+    {plan.phases.map((p) => (
+      <div class="group" id={slug(p.name)}>
+        <h2>{p.name} <span class="small muted">{span(p.from, p.to)}</span></h2>
+        {p.items.map((it) => <PlanRow it={it} />)}
+      </div>
+    ))}
+  </section>
+
+  <section class="sources small muted">
+    <h2 class="label">Notes</h2>
+    <p>Every resource here is free to use online. Week numbers are a guide: if a block takes longer, move the rest back rather than skipping it. The plan is also kept as a Markdown checklist in this site’s <a href="https://github.com/srkarmacharya/website/blob/main/data/math-plan.md">GitHub repository</a>, which you can copy into your own notes and tick off as you go.</p>
+  </section>
+</Base>
+
+<style>
+  .intro { max-width: 760px; }
+  .small-prose { font-size: 16px; }
+  .overview, .full, .sources { margin-top: 48px; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th, td { padding: 9px 0; border-bottom: 1px solid var(--line); text-align: left; font-weight: 400; }
+  thead th { font-size: 12px; color: var(--muted); }
+  tbody th a { text-decoration: none; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .group h2 { font-size: 26px; margin: 44px 0 4px; }
+  .group h2 .small { font-family: var(--sans); font-size: 13px; margin-left: 6px; }
+  .sources p { max-width: 760px; }
+  .sources a { color: inherit; }
+</style>
