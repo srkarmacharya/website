@@ -44,28 +44,6 @@ jobs:
             python scripts/update_data.py
           fi
 
-      - name: Copy the study plan note from the Obsidian vault
-        # The vault is private, so this needs a read-only token saved as the
-        # repository secret VAULT_TOKEN. Without it, the last copy is kept.
-        continue-on-error: true
-        env:
-          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
-        run: |
-          if [ -z "$VAULT_TOKEN" ]; then
-            echo "::notice::No VAULT_TOKEN secret, so the study plan keeps its last copy."
-            exit 0
-          fi
-          curl -fsSL \
-            -H "Authorization: Bearer $VAULT_TOKEN" \
-            -H "Accept: application/vnd.github.raw" \
-            "https://api.github.com/repos/srkarmacharya/obsidian-vault/contents/Math%20study%20plan.md" \
-            -o /tmp/math-plan.md
-          if grep -q '^- \[' /tmp/math-plan.md; then
-            mv /tmp/math-plan.md data/math-plan.md
-          else
-            echo "::warning::The study plan note had no checklist lines, so it was not copied."
-          fi
-
       - name: Commit changes
         run: |
           git config user.name "dashboard-bot"

@@ -3,25 +3,25 @@ import type { Item } from '../lib/studyplan';
 interface Props { it: Item }
 const { it } = Astro.props;
 ---
-<div class:list={['plan-row', { done: it.done }]}>
-  <span class="mark" aria-label={it.done ? 'Done' : 'Not done yet'}>{it.done ? '✓' : ''}</span>
+<div class="plan-row">
+  <span class="wk small muted">{it.weekLabel}</span>
   <div class="body">
     <p class="topic">{it.topic}</p>
-    <p class="meta">
-      {it.weekLabel && <span>{it.weekLabel}</span>}
-      {it.links.map((l) => <a class="accent-link" href={l.url} rel="noopener">{l.label}</a>)}
-    </p>
+    {it.links.length > 0 && (
+      <p class="meta">{it.links.map((l) => <a class="accent-link" href={l.url} rel="noopener">{l.label}</a>)}</p>
+    )}
     {it.note && <p class="note">{it.note}</p>}
   </div>
 </div>
 
 <style>
-  .plan-row { display: grid; grid-template-columns: 22px 1fr; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); }
-  .mark { width: 18px; height: 18px; margin-top: 4px; border: 1.5px solid var(--muted); border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; line-height: 1; color: var(--bg); }
-  .done .mark { background: var(--accent); border-color: var(--accent); }
-  .done .topic { color: var(--muted); }
+  .plan-row { display: grid; grid-template-columns: 96px 1fr; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .wk { padding-top: 3px; font-variant-numeric: tabular-nums; }
   p { margin: 0; }
   .topic { font-size: 16px; }
-  .meta { font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 2px; }
+  .meta { font-size: 13px; display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 2px; }
   .note { font-size: 13px; color: var(--muted); font-style: italic; margin-top: 4px; }
+  @media (max-width: 560px) {
+    .plan-row { grid-template-columns: 1fr; gap: 2px; }
+  }
 </style>

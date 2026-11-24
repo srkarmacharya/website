@@ -1,17 +1,14 @@
----
-start: 2026-11-30
----
-# Math study plan
+# Maths for an economics PhD: a self-study plan
 
-Rebuilding the maths for an economics PhD (see [[Academia]]), 30–45 minutes a day.
+A free plan for rebuilding the maths that economics PhD programmes expect, at about 30–45 minutes a day. Copy this checklist into your own notes and tick off each block as you finish it.
 
-Tick a box when a block is done. My website's study plan page reads this note every day, so keep each line in this shape: `- [ ] Wk 1–2 · what to study · [resource](link)`, with an optional note indented underneath. Set `start` above to the Monday I begin; the site works out the current week from it.
+This file is the source for the Study plan page on sauryakarmacharya.com.np. Keep each line in this shape: `- [ ] Wk 1–2 · what to study · [resource](link)`, with an optional note indented underneath.
 
 ## Calculus
 - [ ] Wk 1 · Essence of Calculus, ch. 1–6: derivatives, chain and product rules · [3Blue1Brown: Essence of Calculus](https://www.3blue1brown.com/topics/calculus)
 	- Intuition first. Watch with pen and paper.
 - [ ] Wk 2 · Essence of Calculus, ch. 7–12: limits, integrals, Taylor series · [3Blue1Brown: Essence of Calculus](https://www.3blue1brown.com/topics/calculus)
-- [ ] Wk 3 · Unit tests on limits and derivatives; study only what I miss · [Khan Academy: Calculus 1](https://www.khanacademy.org/math/calculus-1)
+- [ ] Wk 3 · Unit tests on limits and derivatives; study only what you miss · [Khan Academy: Calculus 1](https://www.khanacademy.org/math/calculus-1)
 	- Test first, then study.
 - [ ] Wk 4 · Applications of derivatives, single-variable optimization · [Khan Academy: Calculus 1](https://www.khanacademy.org/math/calculus-1)
 - [ ] Wk 5 · Integrals and integration techniques · [Khan Academy: Calculus 2](https://www.khanacademy.org/math/calculus-2)
@@ -72,4 +69,4 @@ Tick a box when a block is done. My website's study plan page reads this note ev
 	- Compactness shows up in micro theory proofs.
 
 ## Review
-- [ ] Wk 59–64 · Buffer for missed weeks, then revisit my weakest topic
+- [ ] Wk 59–64 · Buffer for missed weeks, then revisit your weakest topic

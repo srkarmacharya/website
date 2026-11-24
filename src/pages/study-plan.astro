@@ -4,108 +4,62 @@ import PlanRow from '../components/PlanRow.astro';
 import { loadPlan } from '../lib/studyplan';
 
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-
 const plan = loadPlan();
-const pct = (d: number, t: number) => (t ? Math.round((d / t) * 100) : 0);
-const totalWeeks = Math.max(0, ...plan.items.map((i) => i.to ?? 0));
-const startText = plan.start?.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Kathmandu' });
-const weekText = plan.week === null
-  ? (startText ? `Starts ${startText}` : 'Not started')
-  : plan.week > totalWeeks ? 'Plan period finished' : `Week ${plan.week} of ${totalWeeks}`;
-const built = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Asia/Kathmandu' });
+const span = (from: number | null, to: number | null) =>
+  from === null ? '' : from === to ? `Week ${from}` : `Weeks ${from}–${to}`;
 ---
-<Base title="Study plan" description="A self-study plan to rebuild the maths for a PhD in economics, using free courses and books, with progress updated daily.">
+<Base title="Study plan" description="A free self-study plan to rebuild the maths for a PhD in economics: calculus, proofs, linear algebra, probability, statistics and real analysis.">
   <div class="intro">
-    <h1 class="page-title">Maths, from the ground up</h1>
-    <p class="lede">A self-study plan to rebuild the maths I need for a PhD in economics: calculus, proofs, linear algebra, probability and real analysis, 30–45 minutes a day, using only free material. Progress comes from my study notes and updates daily.</p>
+    <h1 class="page-title">Maths for an economics PhD, from the ground up</h1>
+    <p class="lede">A self-study plan for rebuilding the maths that economics PhD programmes expect, using only free courses and books. I’m following it myself, and anyone is welcome to use it.</p>
+    <div class="prose small-prose">
+      <p>It assumes about <strong>30–45 minutes a day</strong> and takes roughly {plan.totalWeeks} weeks, including a few spare ones. Proof-writing runs alongside calculus from the start, because real analysis, the course admissions committees look at most, is about writing proofs rather than calculating.</p>
+      <p>Work the exercises by hand rather than only watching. If a topic is familiar, take the test or problem set first and study only what you miss.</p>
+    </div>
   </div>
 
-  <section class="stats" aria-label="Progress summary">
-    <div>
-      <span class="big">{pct(plan.done, plan.total)}%</span>
-      <span class="small muted">complete</span>
-    </div>
-    <div>
-      <span class="big">{plan.done}<span class="of"> / {plan.total}</span></span>
-      <span class="small muted">blocks done</span>
-    </div>
-    <div>
-      <span class="big wk">{weekText}</span>
-      <span class="small muted">{plan.week !== null && startText ? `Started ${startText}` : 'About 64 weeks in all'}</span>
-    </div>
+  <section class="overview">
+    <h2 class="label">Overview</h2>
+    <table>
+      <thead><tr><th scope="col">Topic</th><th scope="col">When</th><th scope="col" class="num">Blocks</th></tr></thead>
+      <tbody>
+        {plan.phases.map((p) => (
+          <tr>
+            <th scope="row"><a href={`#${slug(p.name)}`}>{p.name}</a></th>
+            <td class="muted">{span(p.from, p.to)}</td>
+            <td class="num muted">{p.items.length}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   </section>
-  <div class="bar main" role="progressbar" aria-valuenow={pct(plan.done, plan.total)} aria-valuemin="0" aria-valuemax="100" aria-label="Overall progress">
-    <span style={`width:${pct(plan.done, plan.total)}%`}></span>
-  </div>
-
-  <section class="phases">
-    <h2 class="label">By topic</h2>
-    {plan.phases.map((p) => (
-      <div class="phase">
-        <a href={`#${slug(p.name)}`}>{p.name}</a>
-        <div class="bar" aria-hidden="true"><span style={`width:${pct(p.done, p.total)}%`}></span></div>
-        <span class="small muted num">{p.done}/{p.total}</span>
-      </div>
-    ))}
-  </section>
-
-  {plan.week !== null && plan.week <= totalWeeks && (
-    <section class="now">
-      <h2 class="label">This week</h2>
-      {plan.thisWeek.length === 0 ? <p class="muted">Nothing scheduled.</p> : plan.thisWeek.map((it) => <PlanRow it={it} />)}
-    </section>
-  )}
-
-  {plan.behind.length > 0 && (
-    <section class="now">
-      <h2 class="label">Still open from earlier weeks</h2>
-      {plan.behind.map((it) => <PlanRow it={it} />)}
-    </section>
-  )}
-
-  {plan.upNext.length > 0 && (
-    <section class="now">
-      <h2 class="label">Up next</h2>
-      {plan.upNext.map((it) => <PlanRow it={it} />)}
-    </section>
-  )}
 
   <section class="full">
-    <h2 class="label">The full plan</h2>
     {plan.phases.map((p) => (
       <div class="group" id={slug(p.name)}>
-        <h3>{p.name} <span class="small muted">{p.done}/{p.total}</span></h3>
+        <h2>{p.name} <span class="small muted">{span(p.from, p.to)}</span></h2>
         {p.items.map((it) => <PlanRow it={it} />)}
       </div>
     ))}
   </section>
 
   <section class="sources small muted">
-    <h2 class="label">About this plan</h2>
-    <p>The plan lives as a checklist in my Obsidian notes. Each day the site copies that note and rebuilds this page, so a ticked box shows up here within a day. Every course and book listed is free to use online.</p>
-    <p>Page built {built}.</p>
+    <h2 class="label">Notes</h2>
+    <p>Every resource here is free to use online. Week numbers are a guide: if a block takes longer, move the rest back rather than skipping it. The plan is also kept as a Markdown checklist in this site’s <a href="https://github.com/srkarmacharya/website/blob/main/data/math-plan.md">GitHub repository</a>, which you can copy into your own notes and tick off as you go.</p>
   </section>
 </Base>
 
 <style>
   .intro { max-width: 760px; }
-  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-bottom: 14px; }
-  .stats div { display: flex; flex-direction: column; }
-  .big { font-family: var(--serif); font-size: 40px; line-height: 1.1; }
-  .big.wk { font-size: 26px; padding-top: 10px; }
-  .of { font-size: 22px; color: var(--muted); }
-  .bar { height: 6px; background: var(--line); border-radius: 999px; overflow: hidden; }
-  .bar span { display: block; height: 100%; background: var(--accent); border-radius: 999px; }
-  .bar.main { height: 8px; }
-  .phases, .now, .full, .sources { margin-top: 52px; }
-  .phase { display: grid; grid-template-columns: 200px 1fr 48px; align-items: center; gap: 16px; padding: 8px 0; border-bottom: 1px solid var(--line); }
-  .phase a { text-decoration: none; }
+  .small-prose { font-size: 16px; }
+  .overview, .full, .sources { margin-top: 48px; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th, td { padding: 9px 0; border-bottom: 1px solid var(--line); text-align: left; font-weight: 400; }
+  thead th { font-size: 12px; color: var(--muted); }
+  tbody th a { text-decoration: none; }
   .num { text-align: right; font-variant-numeric: tabular-nums; }
-  .group h3 { font-size: 23px; margin: 36px 0 4px; }
+  .group h2 { font-size: 26px; margin: 44px 0 4px; }
+  .group h2 .small { font-family: var(--sans); font-size: 13px; margin-left: 6px; }
   .sources p { max-width: 760px; }
-  @media (max-width: 640px) {
-    .stats { grid-template-columns: 1fr 1fr; }
-    .stats div:last-child { grid-column: 1 / -1; }
-    .phase { grid-template-columns: 1fr 64px 40px; gap: 10px; }
-  }
+  .sources a { color: inherit; }
 </style>

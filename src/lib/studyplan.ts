@@ -1,8 +1,8 @@
-// Reads data/math-plan.md at build time. That file is a copy of the note
-// "Math study plan.md" in Saurya's Obsidian vault, refreshed by the daily
-// workflow. Each task line looks like:
+// Reads data/math-plan.md at build time: a public maths self-study plan.
+// Each task line looks like:
 //   - [ ] Wk 1–2 · what to study · [resource](https://link)
-// with an optional note on an indented line underneath.
+// with an optional note on an indented line underneath, grouped under
+// "## Phase" headings. Tick marks are ignored: the site shows the plan only.
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -15,44 +15,23 @@ export interface Item {
   topic: string;
   links: Link[];
   note: string;
-  done: boolean;
 }
-export interface Phase { name: string; items: Item[]; done: number; total: number }
-export interface Plan {
-  start: Date | null;
-  week: number | null; // current week number, 1-based; null before the start date
-  phases: Phase[];
-  items: Item[];
-  done: number;
-  total: number;
-  thisWeek: Item[];
-  upNext: Item[];
-  behind: Item[];
-}
+export interface Phase { name: string; items: Item[]; from: number | null; to: number | null }
+export interface Plan { phases: Phase[]; items: Item[]; totalWeeks: number }
 
 const FILE = path.resolve('data', 'math-plan.md');
 const LINK = /\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g;
 
-export function loadPlan(today = new Date()): Plan {
+export function loadPlan(): Plan {
   const text = fs.existsSync(FILE) ? fs.readFileSync(FILE, 'utf8') : '';
-  const lines = text.split(/\r?\n/);
-
-  let start: Date | null = null;
-  if (lines[0]?.trim() === '---') {
-    for (let i = 1; i < lines.length && lines[i].trim() !== '---'; i++) {
-      const m = lines[i].match(/^start:\s*(\d{4}-\d{2}-\d{2})/);
-      if (m) start = new Date(m[1] + 'T00:00:00+05:45');
-    }
-  }
-
   const items: Item[] = [];
   let phase = 'Plan';
-  for (const line of lines) {
+  for (const line of text.split(/\r?\n/)) {
     const h = line.match(/^##\s+(.+?)\s*$/);
     if (h) { phase = h[1]; continue; }
-    const t = line.match(/^[-*]\s+\[([ xX])\]\s+(.*)$/);
+    const t = line.match(/^[-*]\s+\[[ xX]\]\s+(.*)$/);
     if (t) {
-      let rest = t[2].trim();
+      let rest = t[1].trim();
       let from: number | null = null, to: number | null = null, weekLabel = '';
       const w = rest.match(/^Wk\s*(\d+)(?:\s*[–-]\s*(\d+))?/i);
       if (w) {
@@ -62,7 +41,7 @@ export function loadPlan(today = new Date()): Plan {
       }
       const links = [...rest.matchAll(LINK)].map((m) => ({ label: m[1], url: m[2] }));
       const topic = rest.replace(LINK, '').split('·').map((s) => s.trim()).filter(Boolean).join(' · ');
-      items.push({ phase, weekLabel, from, to, topic, links, note: '', done: t[1] !== ' ' });
+      items.push({ phase, weekLabel, from, to, topic, links, note: '' });
       continue;
     }
     const n = line.match(/^\s+[-*]\s+(.+)$/);
@@ -74,27 +53,11 @@ export function loadPlan(today = new Date()): Plan {
 
   const byName = new Map<string, Phase>();
   for (const it of items) {
-    if (!byName.has(it.phase)) byName.set(it.phase, { name: it.phase, items: [], done: 0, total: 0 });
+    if (!byName.has(it.phase)) byName.set(it.phase, { name: it.phase, items: [], from: null, to: null });
     const p = byName.get(it.phase)!;
-    p.items.push(it); p.total++; if (it.done) p.done++;
+    p.items.push(it);
+    if (it.from !== null) p.from = p.from === null ? it.from : Math.min(p.from, it.from);
+    if (it.to !== null) p.to = p.to === null ? it.to : Math.max(p.to, it.to);
   }
-
-  let week: number | null = null;
-  if (start) {
-    const days = Math.floor((today.getTime() - start.getTime()) / 864e5);
-    week = days >= 0 ? Math.floor(days / 7) + 1 : null;
-  }
-  const inWeek = (it: Item, wk: number) => it.from !== null && it.from <= wk && wk <= (it.to ?? it.from);
-  const thisWeek = week ? items.filter((it) => inWeek(it, week!)) : [];
-  const behind = week ? items.filter((it) => !it.done && it.to !== null && it.to < week!) : [];
-  const upNext = items
-    .filter((it) => !it.done && !thisWeek.includes(it) && !behind.includes(it))
-    .sort((a, b) => (a.from ?? 1e9) - (b.from ?? 1e9))
-    .slice(0, 3);
-
-  return {
-    start, week, phases: [...byName.values()], items,
-    done: items.filter((i) => i.done).length, total: items.length,
-    thisWeek, upNext, behind,
-  };
+  return { phases: [...byName.values()], items, totalWeeks: Math.max(0, ...items.map((i) => i.to ?? 0)) };
 }

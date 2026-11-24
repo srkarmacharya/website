@@ -20,11 +20,10 @@ The daily data update ran successfully, with a green ✓ for all sources.
 | Kalimati vegetables and fruits | ✅ Collecting since 20 Nov 2026. Lines appear from the 2nd day |
 | NEPSE index and sub-indices | ✅ Collecting since 19 Nov 2026. Lines appear from the 2nd trading day |
 | Economy headlines (Google News) | ✅ Updated daily |
-| Study plan page (`/study-plan/`) | ✅ Built. Syncing from the vault needs the `VAULT_TOKEN` secret (see to-dos) |
+| Study plan page (`/study-plan/`) | ✅ Built. Static: shows the plan only, no personal progress |
 
 ## Open to-dos
 
-- [ ] **Saurya:** create a fine-grained GitHub token with read-only **Contents** access to `obsidian-vault` only, and save it in this repo as the Actions secret `VAULT_TOKEN`. Until then, the study plan page shows the copy in `data/math-plan.md`.
 
 - [ ] **Saurya:** proofread the 5 research explainers (`src/content/research/*.md`) for accuracy, and decide whether to state his role on each paper.
 - [ ] **Saurya:** proofread the 4 Opinions pieces, and confirm their dates (the original blogs show day and month but no year, so the years are inferred).
@@ -120,9 +119,9 @@ To add one: copy `example-draft.md`, fill in `title`, `date`, `summary`, `kind`,
 
 ## Study plan (`/study-plan/`)
 
-- **Source:** the note `Math study plan.md` in the private repo `srkarmacharya/obsidian-vault`. Saurya ticks boxes in Obsidian; the obsidian-git plugin pushes the note.
-- **Sync:** the daily workflow copies that note to `data/math-plan.md` using the `VAULT_TOKEN` secret, and the data commit redeploys the site. Without the secret, the step is skipped and the last copy stays.
-- **Format the page expects:** `## Phase` headings, task lines `- [ ] Wk 1–2 · topic · [resource](url)`, an optional indented note line under a task, and `start: YYYY-MM-DD` in the frontmatter (the current week is worked out from it, in Nepal time).
+- **What it is:** a public, free maths self-study plan for an economics PhD that anyone can follow. It shows the plan only; Saurya tracks his own progress in the Obsidian note `Math study plan.md` in his private vault, which the site does not read.
+- **Source:** `data/math-plan.md`. To change the plan, edit that file; the page rebuilds on push.
+- **Format the page expects:** `## Phase` headings, task lines `- [ ] Wk 1–2 · topic · [resource](url)`, and an optional indented note line under a task. Tick marks are ignored.
 - **Code:** `src/lib/studyplan.ts` (parser), `src/pages/study-plan.astro`, `src/components/PlanRow.astro`. Linked in the main menu as "Study plan".
 
 ---
@@ -130,7 +129,7 @@ To add one: copy `example-draft.md`, fill in `title`, `date`, `summary`, `kind`,
 ## Change log
 
 ### 24 Nov 2026
-- Added the Study plan page: overall and per-topic progress, this week, anything still open from earlier weeks, up next, and the full plan with links. It reads a copy of the Obsidian note, refreshed daily.
+- Added the Study plan page: a public maths self-study plan for an economics PhD, with an overview by topic and the full plan with free resource links. Personal progress stays in the Obsidian vault.
 
 ### 20 Nov 2026 (evening)
 - Added 4 Opinions pieces: plain-language rewrites of Saurya's Rupantar blogs, with a "Project blog" tag and a link back to each original.
