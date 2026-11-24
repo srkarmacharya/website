@@ -1,6 +1,6 @@
-# Maths for an economics PhD: a self-study plan
+# Maths for economics: a self-study plan
 
-A free plan for rebuilding the maths that economics PhD programmes expect, at about 30–45 minutes a day. Copy this checklist into your own notes and tick off each block as you finish it.
+A free plan for building the maths that economics relies on, at about 30–45 minutes a day. Copy this checklist into your own notes and tick off each block as you finish it.
 
 This file is the source for the Study plan page on sauryakarmacharya.com.np. Keep each line in this shape: `- [ ] Wk 1–2 · what to study · [resource](link)`, with an optional note indented underneath.
 

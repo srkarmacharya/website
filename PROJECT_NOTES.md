@@ -119,7 +119,7 @@ To add one: copy `example-draft.md`, fill in `title`, `date`, `summary`, `kind`,
 
 ## Study plan (`/study-plan/`)
 
-- **What it is:** a public, free maths self-study plan for an economics PhD that anyone can follow. It shows the plan only; Saurya tracks his own progress in the Obsidian note `Math study plan.md` in his private vault, which the site does not read.
+- **What it is:** a public, free maths-for-economics self-study plan that anyone can follow. It shows the plan only; Saurya tracks his own progress in the Obsidian note `Math study plan.md` in his private vault, which the site does not read.
 - **Source:** `data/math-plan.md`. To change the plan, edit that file; the page rebuilds on push.
 - **Format the page expects:** `## Phase` headings, task lines `- [ ] Wk 1–2 · topic · [resource](url)`, and an optional indented note line under a task. Tick marks are ignored.
 - **Code:** `src/lib/studyplan.ts` (parser), `src/pages/study-plan.astro`, `src/components/PlanRow.astro`. Linked in the main menu as "Study plan".
@@ -129,7 +129,7 @@ To add one: copy `example-draft.md`, fill in `title`, `date`, `summary`, `kind`,
 ## Change log
 
 ### 24 Nov 2026
-- Added the Study plan page: a public maths self-study plan for an economics PhD, with an overview by topic and the full plan with free resource links. Personal progress stays in the Obsidian vault.
+- Added the Study plan page: a public maths-for-economics self-study plan, with an overview by topic and the full plan with free resource links. Personal progress stays in the Obsidian vault.
 
 ### 20 Nov 2026 (evening)
 - Added 4 Opinions pieces: plain-language rewrites of Saurya's Rupantar blogs, with a "Project blog" tag and a link back to each original.

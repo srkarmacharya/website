@@ -8,12 +8,12 @@ const plan = loadPlan();
 const span = (from: number | null, to: number | null) =>
   from === null ? '' : from === to ? `Week ${from}` : `Weeks ${from}–${to}`;
 ---
-<Base title="Study plan" description="A free self-study plan to rebuild the maths for a PhD in economics: calculus, proofs, linear algebra, probability, statistics and real analysis.">
+<Base title="Study plan" description="A free self-study plan for the maths used in economics: calculus, proofs, linear algebra, probability, statistics and real analysis.">
   <div class="intro">
-    <h1 class="page-title">Maths for an economics PhD, from the ground up</h1>
-    <p class="lede">A self-study plan for rebuilding the maths that economics PhD programmes expect, using only free courses and books. I’m following it myself, and anyone is welcome to use it.</p>
+    <h1 class="page-title">Maths for economics, from the ground up</h1>
+    <p class="lede">A self-study plan for building the maths that economics relies on, using only free courses and books. I’m following it myself, and anyone is welcome to use it.</p>
     <div class="prose small-prose">
-      <p>It assumes about <strong>30–45 minutes a day</strong> and takes roughly {plan.totalWeeks} weeks, including a few spare ones. Proof-writing runs alongside calculus from the start, because real analysis, the course admissions committees look at most, is about writing proofs rather than calculating.</p>
+      <p>It assumes about <strong>30–45 minutes a day</strong> and takes roughly {plan.totalWeeks} weeks, including a few spare ones. Proof-writing runs alongside calculus from the start, because real analysis, like much of economic theory, is about writing proofs rather than calculating.</p>
       <p>Work the exercises by hand rather than only watching. If a topic is familiar, take the test or problem set first and study only what you miss.</p>
     </div>
   </div>
