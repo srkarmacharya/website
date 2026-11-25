@@ -575,3 +575,105 @@ date,commodity,unit,min,max,avg
 2026-11-24,Turnip A,KG,100,120,110
 2026-11-24,Water Melon(Green),KG,70,80,75
 2026-11-24,Yam,KG,90,100,95
+2026-11-25,Amla,KG,70,80,75
+2026-11-25,Apple(Fuji),KG,300,350,325
+2026-11-25,Apple(Jumla),Kg,250,350,300
+2026-11-25,Apple(Mustang),Kg,200,250,225
+2026-11-25,Arum,KG,60,70,65
+2026-11-25,Avocado,KG,200,300,250
+2026-11-25,Bakula,KG,90,100,95
+2026-11-25,Bamboo Shoot,KG,140,160,150
+2026-11-25,Banana(Malbhog),Doz,100,150,125
+2026-11-25,Banana(Nepali),Per Dozen,100,150,125
+2026-11-25,Barela,KG,30,40,35
+2026-11-25,Bitter Gourd,KG,80,90,85
+2026-11-25,Bottle Gourd,KG,80,90,82
+2026-11-25,Brd Leaf Mustard,KG,50,80,65
+2026-11-25,Brinjal Long,KG,20,30,25
+2026-11-25,Brinjal Round,KG,40,50,45
+2026-11-25,Broccoli,KG,100,120,110
+2026-11-25,Cabbage(Local),KG,20,30,25
+2026-11-25,Carrot(Local),KG,80,90,85
+2026-11-25,Carrot(Terai),KG,50,60,55
+2026-11-25,Cauli Local,KG,40,50,45
+2026-11-25,Cauli Terai,KG,30,40,35
+2026-11-25,Celery,KG,400,500,450
+2026-11-25,Chilli Dry,KG,500,550,531.67
+2026-11-25,Chilli Green(Bullet),KG,100,120,110
+2026-11-25,Chilli Green(Long),KG,90,100,95
+2026-11-25,Christophine,KG,15,20,17.5
+2026-11-25,Coconut(Green),Kg,150,200,175
+2026-11-25,Coconut(Tender),Kg,60,80,70
+2026-11-25,Cow pea(Long),KG,90,100,95
+2026-11-25,Cowpea(Short),KG,60,70,65
+2026-11-25,Cress Leaf,KG,100,150,125
+2026-11-25,Cucumber(Hybrid),KG,30,40,35
+2026-11-25,Cucumber(Local),KG,80,90,82.86
+2026-11-25,Cucumber(LocalCross),Kg,80,90,82.86
+2026-11-25,Dragon Fruit(Nepali),Kg,400,500,450
+2026-11-25,Drumstick,KG,200,250,225
+2026-11-25,Fennel Leaf,KG,100,120,110
+2026-11-25,Fenugreek Leaf,KG,100,150,125
+2026-11-25,French Bean(Hybrid),KG,100,120,113.33
+2026-11-25,French Bean(Local),KG,100,120,108.33
+2026-11-25,French Bean(Rajma),KG,100,130,115
+2026-11-25,Ginger,KG,80,100,88.33
+2026-11-25,Green Peas,KG,100,120,110
+2026-11-25,Guava,KG,250,300,275
+2026-11-25,Gundruk,KG,300,350,325
+2026-11-25,King Oyster,Kg,300,320,310
+2026-11-25,Kiwi,KG,200,300,250
+2026-11-25,Lemon,KG,50,60,55
+2026-11-25,Lentinula Edodes,Kg,800,1000,900
+2026-11-25,Lettuce,KG,100,150,125
+2026-11-25,Lime,KG,200,300,250
+2026-11-25,Mandarin,KG,150,200,175
+2026-11-25,Mint,KG,600,700,650
+2026-11-25,Mombin,KG,70,80,75
+2026-11-25,Mushroom(Button),KG,500,550,525
+2026-11-25,Mushroom(Kanya),KG,300,350,325
+2026-11-25,Mustard Leaf,KG,50,80,65
+2026-11-25,Okra,KG,100,120,110
+2026-11-25,Onion Dry (Indian),KG,88,93,91.14
+2026-11-25,Onion Green,KG,150,200,175
+2026-11-25,Orange(Indian),KG,90,120,105
+2026-11-25,Orange(Nepali),KG,90,120,105
+2026-11-25,Papaya(Indian),KG,100,120,110
+2026-11-25,Papaya(Nepali),KG,50,60,55
+2026-11-25,Parsley,KG,2400,2800,2600
+2026-11-25,Pear(Chinese),KG,250,300,275
+2026-11-25,Pineapple,1 Pc,150,200,175
+2026-11-25,Pointed Gourd(Local),KG,90,100,95
+2026-11-25,Pointed Gourd(Terai),KG,100,120,110
+2026-11-25,Pomegranate,KG,350,400,375
+2026-11-25,Potato Red(Indian),KG,35,40,37.5
+2026-11-25,Potato Red(Long),KG,50,55,52.5
+2026-11-25,Potato Red(Round),KG,50,55,52.5
+2026-11-25,Potato White,KG,35,40,37.5
+2026-11-25,Pumpkin,KG,60,70,65
+2026-11-25,Raddish Red,KG,20,30,25
+2026-11-25,Raddish White(Hybrid),KG,20,30,25
+2026-11-25,Red Cabbbage,KG,150,180,165
+2026-11-25,Sarifa,KG,200,300,250
+2026-11-25,Smooth Gourd,KG,80,90,85
+2026-11-25,Snake Gourd,KG,30,40,35
+2026-11-25,Spinach Leaf,KG,100,130,115
+2026-11-25,Sponge Gourd,KG,70,80,75
+2026-11-25,Squash(Long),KG,20,30,25
+2026-11-25,Squash(Round),KG,20,30,25
+2026-11-25,Strawberry,KG,400,500,450
+2026-11-25,Sugarbeet,KG,80,90,85
+2026-11-25,Sweet Orange,KG,150,200,175
+2026-11-25,Sweet Potato,KG,50,60,55
+2026-11-25,Sword Bean,KG,70,80,75
+2026-11-25,Tamarind,KG,160,180,170
+2026-11-25,Tofu,KG,140,160,150
+2026-11-25,Tomato Big(Indian),KG,60,70,65
+2026-11-25,Tomato Big(Nepali),KG,60,70,65
+2026-11-25,Tomato Small(Local),KG,15,25,20
+2026-11-25,Tomato Small(Terai),KG,35,60,48
+2026-11-25,Tomato Small(Tunnel),KG,30,60,44.5
+2026-11-25,Tree Tomato,Kg,100,150,125
+2026-11-25,Turnip A,KG,100,120,110
+2026-11-25,Water Melon(Green),KG,70,80,75
+2026-11-25,Yam,KG,90,100,95
